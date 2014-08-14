@@ -63,7 +63,8 @@ public class Model {
 	 * @throws DirectoryAlreadyExistsException das Buch existiert bereits
 	 * @throws SQLException Datenbankfehler
 	 * */
-	public void createBook(String bookName) throws DirectoryAlreadyExistsException, SQLException
+	public void createBook(String bookName) 
+			throws DirectoryAlreadyExistsException, SQLException
 	{
 		//check existence
 		if(db.existsBook(bookName))
@@ -339,14 +340,16 @@ public class Model {
 	 * */
 	public Tree getTree() throws SQLException
 	{
+		ActionType type = ActionType.load;
 		String[] books = db.getAllBooks();
 		Tree t = new Tree();
 		for (int i = 0; i < books.length; i++) {
 			Tree chapterTree = new Tree(books[i]);
-			String[] chapters = db.getBookChildren(getBookID(ActionType.load, books[i]));
+			String[] chapters = db.getBookChildren(getBookID(type, books[i]));
 			for (int j = 0; j < chapters.length; j++) {
 				Tree pageTree = new Tree(chapters[j]);
-				String[] pages = db.getChapterChildren(getChapterID(ActionType.load, chapters[j], books[i]));
+				int chapterID = getChapterID(type, chapters[j], books[i]);
+				String[] pages = db.getChapterChildren(chapterID);
 				for (int k = 0; k < pages.length; k++) {
 					pageTree.addChildren(pages[k]);
 				}
@@ -357,4 +360,44 @@ public class Model {
 		return t;
 	}
 	
+	//rename
+	/**
+	 * Diese Methode aendert den Namen eines vorhandenen Buches
+	 * @param bookName alter Name
+	 * @param newName neuer Name
+	 * */
+	public void renameBook(String bookName, String newName) 
+			throws DirectoryDoesNotExistsException, SQLException
+	{
+		int bookID = getBookID(ActionType.rename, bookName);
+		db.renameBook(bookID, newName);
+	}
+	
+	/**
+	 * Diese Methode aendert den Namen eines vorhandenen Kapitels
+	 * @param bookName name des Buches
+	 * @param chapterName alter Name
+	 * @param newName neuer Name
+	 * */
+	public void renameChapter(String chapterName, String bookName, 
+			String newName) throws DirectoryDoesNotExistsException, SQLException
+	{
+		int chapterID = getChapterID(ActionType.rename, chapterName, bookName);
+		db.renameChapter(chapterID, newName);
+	}
+	
+	/**
+	 * Diese Methode aendert den Namen eines vorhandenen Buches
+	 * @param bookName Name des Buches
+	 * @param chapterName Name des Kapitels
+	 * @param pageName alter Name
+	 * @param newName neuer Name
+	 * */
+	public void renamePage(String pageName, String chapterName, String bookName,
+			String newName) throws DirectoryDoesNotExistsException, SQLException
+	{
+		ActionType e = ActionType.rename;
+		int pageID = getPageID(e, pageName, chapterName, bookName);
+		db.renamePage(pageID, newName);
+	}
 }

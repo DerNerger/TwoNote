@@ -18,29 +18,32 @@ import pageData.PageInformation;
 
 /**
  * Dies ist die konkrete Implementierung der Schnittstelle zur Datenbank.
- * Dazu implementiert diese Klasse das Interface IDataBase, welches eine abstrakte
- * Definition der Schnittstelle von Java zu einer beliebigen Datenbank vorgibt.
- * Bei der konkret in dieser Klasse verwendeten Datenbank handelt es sich um MySql
+ * Dazu implementiert diese Klasse das Interface IDataBase, welches eine 
+ * abstrakte Definition der Schnittstelle von Java zu einer beliebigen
+ * Datenbank vorgibt. Bei der konkret in dieser Klasse verwendeten 
+ * Datenbank handelt es sich um MySql
  * */
 public class MySqlDatabase implements IDataBase {
 
 	/**
-	 *Das Attribut con ist eine Instanz der Klasse java.sql.Connection und liefert die
-	 *Schnittstelle zu jdbc.
+	 *Das Attribut con ist eine Instanz der Klasse java.sql.Connection 
+	 *und liefert die Schnittstelle zu jdbc.
 	 * */
 	private Connection con;
 	
 	//constructor
 	/**
-	 * Der Konstruktor l��dt den jdbc Treiber und richtet danach eine Datenbankverbindung mittels
-	 * der ��bergebenen Daten ein, indem er das Attribut con instanziiert.
+	 * Der Konstruktor laedt den jdbc Treiber und richtet danach eine 
+	 * Datenbankverbindung mittels der uebergebenen Daten ein, indem er 
+	 * das Attribut con instanziiert.
 	 * @param url der Pfad zur Datenbank
 	 * @param name der Loginname zur Datenbank
 	 * @param pw das Passwort zur Datenbank
 	 * @throws ClassNotFoundException Fehler beim Laden des jdbc Treibers
 	 * @throws SQLException Datenbankfehler
 	 * */
-	public MySqlDatabase (String url, String name, String pw) throws ClassNotFoundException, SQLException
+	public MySqlDatabase (String url, String name, String pw) 
+			throws ClassNotFoundException, SQLException
 	{		
 		//load CDBC driver
 		Class.forName("com.mysql.jdbc.Driver");
@@ -71,7 +74,8 @@ public class MySqlDatabase implements IDataBase {
 	 * {@inheritDoc}
 	 * */
 	@Override
-	public void createChapter(String chapterName, int bookID) throws SQLException {
+	public void createChapter(String chapterName, int bookID) 
+			throws SQLException {
 		Statement stmt =null;
 		try  {		
 			stmt = con.createStatement();
@@ -88,7 +92,8 @@ public class MySqlDatabase implements IDataBase {
 	 * {@inheritDoc}
 	 * */
 	@Override
-	public void createPage(PageInformation pageInfo, int chapterID) throws SQLException {
+	public void createPage(PageInformation pageInfo, int chapterID) 
+			throws SQLException {
 		Statement stmt =null;
 		String pageName = pageInfo.getPageName();
 		int width = pageInfo.getWidth();
@@ -109,7 +114,8 @@ public class MySqlDatabase implements IDataBase {
 	 * {@inheritDoc}
 	 * */
 	@Override
-	public void createContent(byte[] contentBytes, int contentNumber, int pageID) throws SQLException {
+	public void createContent(byte[] contentBytes, int contentNumber, int pageID)
+			throws SQLException {
 		Statement stmt =null;
 		String byteString = DatatypeConverter.printBase64Binary(contentBytes);
 		try  {
@@ -198,7 +204,8 @@ public class MySqlDatabase implements IDataBase {
 	 * {@inheritDoc}
 	 * */
 	@Override
-	public void saveContent(byte[] contentBytes, int contentID) throws SQLException {
+	public void saveContent(byte[] contentBytes, int contentID) 
+			throws SQLException {
 		Statement stmt =null;
 		String byteString = DatatypeConverter.printBase64Binary(contentBytes);
 		try  {	
@@ -216,7 +223,8 @@ public class MySqlDatabase implements IDataBase {
 	 * {@inheritDoc}
 	 * */
 	@Override
-	public void savePage(PageInformation pageInfo, int chapterID, int pageID) throws SQLException {
+	public void savePage(PageInformation pageInfo, int chapterID, int pageID) 
+			throws SQLException {
 		Statement stmt =null;
 		String pageName = pageInfo.getPageName();
 		int width = pageInfo.getWidth();
@@ -260,7 +268,7 @@ public class MySqlDatabase implements IDataBase {
 	 * {@inheritDoc}
 	 * */
 	@Override
-	public PageInformation loadPageInformation(int pageID) throws SQLException {
+	public PageInformation loadPageInformation(int pageID) throws SQLException{
 		Statement stmt =null;
 		ResultSet rst =  null;		
 		try {
@@ -312,7 +320,8 @@ public class MySqlDatabase implements IDataBase {
 	 * {@inheritDoc}
 	 * */
 	@Override
-	public boolean existsChapter(String chapterName, int bookID) throws SQLException {
+	public boolean existsChapter(String chapterName, int bookID) 
+			throws SQLException {
 		Statement stmt =null;
 		ResultSet rst =  null;
 		try {
@@ -335,7 +344,8 @@ public class MySqlDatabase implements IDataBase {
 	 * {@inheritDoc}
 	 * */
 	@Override
-	public boolean existsPage(String pageName, int chapterID) throws SQLException {
+	public boolean existsPage(String pageName, int chapterID) 
+			throws SQLException {
 		Statement stmt =null;
 		ResultSet rst =  null;
 		try {
@@ -358,7 +368,8 @@ public class MySqlDatabase implements IDataBase {
 	 * {@inheritDoc}
 	 * */
 	@Override
-	public boolean existsContent(int contentNumber, int pageID) throws SQLException {
+	public boolean existsContent(int contentNumber, int pageID) 
+			throws SQLException {
 		Statement stmt =null;
 		ResultSet rst =  null;
 		try {
@@ -404,7 +415,8 @@ public class MySqlDatabase implements IDataBase {
 	 * {@inheritDoc}
 	 * */
 	@Override
-	public int getChapterID(String chapterName, int bookID) throws SQLException {
+	public int getChapterID(String chapterName, int bookID) 
+			throws SQLException {
 		Statement stmt =null;
 		ResultSet rst =  null;
 		try {
@@ -448,7 +460,7 @@ public class MySqlDatabase implements IDataBase {
 	 * {@inheritDoc}
 	 * */
 	@Override
-	public int getContentID(int ContentNumber, int pageID) throws SQLException {
+	public int getContentID(int ContentNumber, int pageID) throws SQLException{
 		Statement stmt =null;
 		ResultSet rst =  null;
 		try {
@@ -579,4 +591,57 @@ public class MySqlDatabase implements IDataBase {
 		}
 	}
 
+	/**
+	 * {@inheritDoc}
+	 * */
+	@Override
+	public void renameBook(int bookID, String newName) 	throws SQLException
+	{
+		Statement stmt =null;
+		try  {		
+			stmt = con.createStatement();
+			String query="UPDATE `Books` SET Name = '"+newName+"', WHERE ID= '"+bookID+"';";
+			stmt.executeUpdate(query);
+		}
+		finally
+		{
+			if(stmt!=null) stmt.close();
+		}
+	}
+	
+	/**
+	 * {@inheritDoc}
+	 * */
+	@Override
+	public void renameChapter(int chapterID, String newName)throws SQLException
+	{
+		Statement stmt =null;
+		try  {		
+			stmt = con.createStatement();
+			String query="UPDATE `Chapter` SET Name = '"+newName+"', WHERE ID= '"+chapterID+"';";
+			stmt.executeUpdate(query);
+		}
+		finally
+		{
+			if(stmt!=null) stmt.close();
+		}
+	}
+	
+	/**
+	 * {@inheritDoc}
+	 * */
+	@Override
+	public void renamePage(int pageID, String newName) throws SQLException
+	{
+		Statement stmt =null;
+		try  {		
+			stmt = con.createStatement();
+			String query="UPDATE `Pages` SET Name = '"+newName+"', WHERE ID= '"+pageID+"';";
+			stmt.executeUpdate(query);
+		}
+		finally
+		{
+			if(stmt!=null) stmt.close();
+		}
+	}
 }

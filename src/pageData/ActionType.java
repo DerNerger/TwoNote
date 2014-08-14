@@ -5,4 +5,6 @@ public enum ActionType {
 	create,
 	load,
 	save,
+	rename,
+	move
 }
