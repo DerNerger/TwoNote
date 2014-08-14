@@ -8,39 +8,34 @@ package dataProcessing;
 import java.io.IOException;
 import java.sql.SQLException;
 
+import GUI.View;
+import Tools.EditMod;
+import Tools.TextEditTool;
+import Tools.Tool;
+
 import dataManagement.Model;
 import dataManagement.Tree;
 import pageData.Content;
-import pageData.ContentType;
+import pageData.DirectoryAlreadyExistsException;
 import pageData.DirectoryDoesNotExistsException;
 import pageData.Page;
 import pageData.PageInformation;
-import pageData.Startpage;
 import pageData.TextBox;
 
 /**
- * Die Klasse Controller dient der Kapselung der Datenverwaltung und ist Teil des MVC-Design.
- * Der Controller speichert und verwaltet die aktuell geöffnete Sitzung des Programms.
- * Mittels des Controllers kann eine Seite geladen und modifiziert werden.
- * Alle komplexeren Aufgaben, welcher nicht ohne Verarbeitungslogik von View zu Model
- * weitergeleitet werden können werden vom Controller verarbeitet.
+ * Die Klasse Controller dient der Kapselung der Datenverwaltung und ist Teil 
+ * des MVC-Design. Der Controller speichert und verwaltet die aktuell 
+ * geoeffnete Sitzung des Programms. Mittels des Controllers kann eine 
+ * Seite geladen und modifiziert werden.
  * */
 public class Controller {
 	
-	/**
-	 * Die aktuell geöffnete Seite
-	 * */
-	private Page currentPage;
-	
-	/**
-	 * Eine Referenz auf das Datenmodel
-	 * */
+	private View view;
 	private Model model;
-	
-	/**
-	 * Der Verzeichnisbaum
-	 * */
 	private Tree dataTree;
+	private Page currentPage;
+	private Tool currentTool;
+	private EditMod editMod;
 	
 	//constructor
 	/**
@@ -48,10 +43,129 @@ public class Controller {
 	 * der Verzeichnisbaum aktualisiert
 	 * @throws SQLException Datenbankfehler
 	 * */
-	public Controller(Model model) throws SQLException
+	public Controller()
 	{
-		this.model = model;
-		refreshTree();
+		try {
+			//this.view = new SwingView(this);
+			this.model = new Model();
+			refreshTree(); 
+			//this.currentPage = gute default loesung
+			//this.currentTool = gute default loesung
+			this.editMod = EditMod.Curser;
+		} catch (ClassNotFoundException | SQLException e) {
+			handleFatalError(e);
+		}
+	}
+	
+	//create
+	public void createBook(String bookName)
+	{
+		try {
+			model.createBook(bookName);
+			refreshTree();
+		} catch (DirectoryAlreadyExistsException e) {
+			handleError(e);
+		} catch (SQLException e) {
+			handleFatalError(e);
+		}
+	}
+	
+	public void createChapter(String chapterName, String bookName)
+	{
+		try {
+			model.createChapter(chapterName, bookName);
+			refreshTree();
+		} catch (DirectoryAlreadyExistsException e) {
+			handleError(e);
+		} catch (SQLException e) {
+			handleFatalError(e);
+		}
+	}
+	
+	public void createPage(String pageName, String chapterName, String bookName)
+	{
+		try {
+			model.createPage(pageName, chapterName, bookName);
+			refreshTree();
+		} catch (DirectoryAlreadyExistsException e) {
+			handleError(e);
+		} catch (SQLException e) {
+			handleFatalError(e);
+		}
+	}
+	
+	/**
+    * Auf der Aktuell geoeffneten Seite wird ein Seiteninhalt erstellt,
+	* und somit auf der aktuellen Seite als ungespeicherte aenderung vermerkt.
+	* @param type der Typ des Seiteninhalts
+	* @param x Die x-Koordinate an welcher der Inhalt erstellt werden soll
+	* @param y Die y-Koordinate an welcher der Inhalt erstellt werden soll
+	* @return der erstellte Seiteninhalt
+	* */
+	public void createContent(int x, int y) 
+	{
+		Content cont = null;
+		switch(editMod)
+		{
+		case Text:
+			cont = new TextBox(x, y);
+			//currentTool = new TextEditTool(cont);
+			view.showTool(currentTool);
+			break;
+		default:
+			break;
+		}
+		
+		if(cont != null)
+		{
+			currentPage.addContent(cont);
+		}
+	}
+	
+	//delete
+	public void delete(String path)
+	{
+		try {
+			String[] pathParts = path.split(", ");
+			//remove the [ in front of the path
+			pathParts[0] = pathParts[0].substring(1, pathParts[0].length());
+			if( pathParts.length == 1) //is it a book ?
+				deleteBook(pathParts[0]);
+			else
+				if( pathParts.length == 2) // is it a chapter ?
+					deleteChapter(pathParts[0], pathParts[1]);
+				else // it is a page
+					deletePage(pathParts[0], pathParts[1], pathParts[2]);
+			refreshTree();
+		} catch (SQLException e) {
+			handleFatalError(e);
+		} catch(DirectoryDoesNotExistsException e){
+			handleError(e);
+		}
+	}
+	
+	private void deleteBook(String book) 
+			throws DirectoryDoesNotExistsException, SQLException
+	{
+		//remove the ] at the end of the path
+		book = book.substring(0, book.length()-1);
+		model.deleteBook(book); //delete it in dataBase
+	}
+	
+	private void deleteChapter(String book, String chapter) 
+			throws DirectoryDoesNotExistsException, SQLException
+	{
+		//remove the ] at the end of the path
+		chapter = chapter.substring(0, chapter.length()-1);
+		model.deleteChapter(chapter, book); //delete it in dataBase
+	}
+	
+	private void deletePage(String book, String chapter, String page) 
+			throws DirectoryDoesNotExistsException, SQLException
+	{
+		//remove the ] at the end of the path
+		page = page.substring(0, page.length()-1);
+		model.deletePage(page, chapter, book); //delete it in dataBase
 	}
 	
 	//load Page
@@ -60,131 +174,153 @@ public class Controller {
 	* und als aktuelle Seite gespeichert. Sollte die angeforderte Seite
 	* Startseite sein, wird eine Instanz der Startseite erstellt und in
 	* currentPage gespeichert. Die geladene Seite ist direkt nicht von der
-	* View aus ansprechbar, sondern es müssen die Inhalte oder die PageInformation
-	* über die entsprechenden Methoden abgefragt werden.
+	* View aus ansprechbar, sondern es muessen die Inhalte oder die PageInformation
+	* ueber die entsprechenden Methoden abgefragt werden.
 	* @param pageName der Name der Seite
 	* @param chapterName der Name des Kapitels
 	* @param bookName der Name des Buches
-	* @throws DirectoryDoesNotExistsException Pfad nicht korrekt
-	* @throws SQLException Datenbankfehler
-	 * @throws ClassNotFoundException Fehler beim deserialisieren
 	 * */
-	public void loadPage(String pageName, String chapterName, String bookName) 
-			throws DirectoryDoesNotExistsException, SQLException, IOException, ClassNotFoundException
+	public void openPage(String pageName, String chapterName, String bookName) 
 	{
-		if(pageName == "Startseite")
-			currentPage = new Startpage();
-		else
+		try {
 			currentPage = model.loadPage(pageName, chapterName, bookName);
-	}
-	
-	//getContent :content[]
-	/**
-	 * Es wird der Inhalt der aktuell geöffneten Seite als Content[] zurückgegeben
-	 * @throws NullPointerException es ist aktuell keine Seite geladen
-	 * @return der Inhalt der aktuell geöffneten seite
-	 * */
-	public Content[] getContent() throws NullPointerException
-	{
-		if(currentPage == null)
-			throw new NullPointerException("Es wurde keine Seite geoeffnet");
-		return currentPage.getContent();
-	}
-	
-	//createContent
-	/**
-	 * Auf der Aktuell geöffneten Seite wird ein Seiteninhalt erstellt,
-	 * und somit auf der aktuellen Seite als ungespeicherte Änderung vermerkt.
-	 * @param type der Typ des Seiteninhalts
-	 * @param x Die x-Koordinate an welcher der Inhalt erstellt werden soll
-	 * @param y Die y-Koordinate an welcher der Inhalt erstellt werden soll
-	 * @return der erstellte Seiteninhalt
-	 * */
-	public Content createContent(ContentType type, int x, int y) 
-	{
-		Content content = null;
-		//create
-		switch (type) {
-		case textBox:
-			content = new TextBox(x, y);
-			break;
-
-		default:
-			new RuntimeException("Gewaehlter content ist nicht verfuegbar");
+			Content[] content = currentPage.getContent();
+			PageInformation pageInfo = currentPage.getPageInfo();
+			view.showPage(content, pageInfo);
+		} catch (DirectoryDoesNotExistsException e) {
+			handleError(e);
+		} catch (ClassNotFoundException | SQLException | IOException e) {
+			handleFatalError(e);
 		}
-		//create content on page
-		currentPage.createContent(content);
-		return content;
 	}
 	
-	/**
-	 * Ein übergebener Seiteninhalt wird auf der aktuellen Seite gespeichert.
-	 * Sollte die aktuell geöffnete Seite nicht die Startseite sein wird diese
-	 * gespeichert.
-	 * @param c der Seiteninhalt
-	 * @throws DirectoryDoesNotExistsException der Pfad der Seite ist falsch
-	 * @throws SQLException Datenbankfehler
-	 * @throws IOException Fehler beim Serialisieren
-	 * */
-	public void saveContent(Content c) 
-			throws DirectoryDoesNotExistsException, SQLException, IOException
+	//rename
+	public void rename(String path, String newName)
 	{
-		if(currentPage.getPageInfo().getPageName().equals("Startseite"))
-			return;
-		currentPage.saveContent(c);
-		model.savePage(currentPage);
+		try {
+			String[] pathParts = path.split(", ");
+			//remove the [ in front of the path
+			pathParts[0] = pathParts[0].substring(1, pathParts[0].length());
+			if( pathParts.length == 1) //is it a book ?
+				renameBook(pathParts[0], newName);
+			else
+				if( pathParts.length == 2) // is it a chapter ?
+					renameChapter(pathParts[0], pathParts[1], newName);
+				else // it is a page
+					renamePage(pathParts[0],pathParts[1],pathParts[2],newName);
+			refreshTree();
+		} catch (SQLException | ClassNotFoundException | IOException e) {
+			handleFatalError(e);
+		} catch(DirectoryDoesNotExistsException e){
+			handleError(e);
+		} 
 	}
 	
-	/**
-	 * Ein übergebener Seiteninhalt wird auf der aktuellen Seite gelöscht.
-	 * Sollte die aktuell geöffnete Seite nicht die Startseite sein wird diese
-	 * gespeichert.
-	 * @param c der Seiteninhalt
-	 * @throws DirectoryDoesNotExistsException der Pfad der Seite ist falsch
-	 * @throws SQLException Datenbankfehler
-	 * @throws IOException Fehler beim Serialisieren
-	 * */
-	public void deleteContent(Content c) 
-			throws DirectoryDoesNotExistsException, SQLException, IOException
+	private void renameBook(String book, String newName) 
+			throws DirectoryDoesNotExistsException, SQLException
 	{
-		if(currentPage.getPageInfo().getPageName().equals("Startseite"))
-			return;
-		currentPage.deleteContent(c.getNumber());
-		model.savePage(currentPage);
+		//remove the ] at the end of the path
+		book = book.substring(0, book.length()-1);
+		model.renameBook(book, newName);
 	}
 	
-	/**
-	 * Der Verzeichnisbaum wird aktualisiert. Diese Methode wird bei
-	 * instanziieren des Controllers aufgerufen, und muss danach von der 
-	 * View aufgerufen werden, falls die Anzeige des Verzeichnisbaums im
-	 * GUI aktualisiert werden soll. Der vom Model geladene Verzeichnisbaum
-	 * wird in dataTree gespeichert und kann über die Methode getDataTree()
-	 * abgefragt werden.
-	 * @throws SQLException Datenbankfehler
-	 * */
-	public void refreshTree() throws SQLException
+	private void renameChapter(String chapter, String book, String newName) 
+			throws DirectoryDoesNotExistsException, SQLException
 	{
-		dataTree = model.getTree();
+		//remove the ] at the end of the path
+		chapter = chapter.substring(0, chapter.length()-1);
+		model.renameChapter(chapter, book, newName);
 	}
 	
-	/**
-	 * Der aktuell geladene Verzeichnisbaum wird zurückgegeben. 
-	 * Gegebenfalls muss dieser vorher mittels der Methode refreshTree()
-	 * aktualisiert werden.
-	 * @return der Verzeichnisbaum
-	 * */
-	public Tree getDataTree()
+	private void renamePage(String page, String chapter, String book, 
+			String newName) throws DirectoryDoesNotExistsException, 
+			SQLException, ClassNotFoundException, IOException
 	{
-		return dataTree;
+		//remove the ] at the end of the path
+		page = page.substring(0, page.length()-1);
+		
+		//load the Page
+		Page tempPage = model.loadPage(page, chapter, book);
+		tempPage.getPageInfo().setPageName(newName);
+		
+		model.savePage(tempPage); //save the page
 	}
 	
-	/**
-	 * Es werden die Seiteninformationen zur aktuellen Seite zurückgegeben.
-	 * @return die Seiteninformationen
-	 * */
-	public PageInformation getCurrentPageInformation()
+	//move
+	public void move(String oldPath, String newPath)
 	{
-		return currentPage.getPageInfo();
+		try {
+			String[] pathPartsOld = oldPath.split(", ");
+			String[] pathPartsNew = newPath.split(", ");
+			
+			//is it a book ?
+			if(pathPartsOld.length == 1 || pathPartsNew.length == 1)
+				return; //sensless to move a book
+			else
+			{
+				String oldBook = pathPartsOld[0];
+				String newBook = pathPartsNew[0];
+				String oldChapter = pathPartsOld[1];
+				
+				//remove the [ in front of the path
+				oldBook = oldBook.substring(1, oldBook.length());
+				newBook = newBook.substring(1, newBook.length());
+				
+				// is it a chapter ?
+				if( pathPartsOld.length == 2 || pathPartsNew.length == 2)
+					moveChapter(oldChapter, oldBook, newBook);
+				else // it is a page
+				{
+					String oldPage = pathPartsOld[2];
+					String newChapter = pathPartsNew[1];
+					movePage(oldPage, oldChapter, oldBook, newChapter, newBook);
+				}
+			}
+			refreshTree();
+		} catch (SQLException | ClassNotFoundException | IOException e) {
+			handleFatalError(e);
+		} catch(DirectoryDoesNotExistsException e){
+			handleError(e);
+		} 
 	}
 	
+	private void moveChapter(String oldChapter, String oldBook, String newBook) 
+			throws SQLException
+	{
+		oldChapter = oldChapter.substring(0, oldChapter.length() - 1);
+		model.move(oldChapter, oldBook, newBook);
+	}
+	
+	private void movePage(String oldPage, String oldChapter, String oldBook, 
+			String newChapter, String newBook) 
+			throws DirectoryDoesNotExistsException, ClassNotFoundException,
+			SQLException, IOException
+	{
+		oldPage = oldPage.substring(0, oldPage.length() - 1);
+		Page tempPage = model.loadPage(oldPage, oldChapter, oldBook);
+		tempPage.getPageInfo().setBookName(newBook);
+		tempPage.getPageInfo().setChapterName(newChapter);
+		model.savePage(tempPage);
+	}
+	
+	private void refreshTree()
+	{
+		try {
+			dataTree = model.getTree();
+			view.refreshTree(dataTree);
+		} catch (SQLException e) {
+			handleFatalError(e);
+		}
+	}
+	
+	private void handleFatalError(Exception e)
+	{
+		view.showMessage("Fataler Fehler!", e.getMessage());
+		System.exit(1);
+	}
+	
+	private void handleError(Exception e)
+	{
+		view.showMessage("Warnung", e.getMessage());
+	}
 }

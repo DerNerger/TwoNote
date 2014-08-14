@@ -393,7 +393,7 @@ public class Model {
 	 * @param chapterName Name des Kapitels
 	 * @param newBook name des neuen Buches
 	 */
-	public void move(String bookName, String chapterName, String newBook)
+	public void move(String chapterName, String bookName, String newBook)
 		throws SQLException
 	{
 		int chapterID = getChapterID(ActionType.move, chapterName, bookName);
