@@ -627,16 +627,17 @@ public class MySqlDatabase implements IDataBase {
 		}
 	}
 	
+	//move
 	/**
 	 * {@inheritDoc}
 	 * */
 	@Override
-	public void renamePage(int pageID, String newName) throws SQLException
+	public void move(int chapterID, int newBookId) throws SQLException
 	{
 		Statement stmt =null;
 		try  {		
 			stmt = con.createStatement();
-			String query="UPDATE `Pages` SET Name = '"+newName+"', WHERE ID= '"+pageID+"';";
+			String query="UPDATE `Chapter` SET Book = '"+newBookId+"', WHERE ID= '"+chapterID+"';";
 			stmt.executeUpdate(query);
 		}
 		finally

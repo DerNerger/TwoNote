@@ -93,7 +93,7 @@ public interface IDataBase {
 	/**
 	 * Diese Methode speichert eine Seite in der Tabelle "Pages"
 	 * @param pageInfo die Information zur Seite
-	 * @param chapterID das Kapitel zu welchem die Seite gehoert
+	 * @param chapterID das Kapitel zu welchem die Seite gehoertb
 	 * @param pageID die id der Seite innerhalb der Tabelle "Pages"
 	 * @throws SQLException Datenbankfehler
 	 * */
@@ -236,10 +236,10 @@ public interface IDataBase {
 	 */
 	public void renameChapter(int chapterID, String newName)throws SQLException;
 	
+	//move
 	/**
-	 *Diese Methode aendert den Namen einer Seite in der Datenbank
-	 *@param  pageID Die id der Seite
-	 *@param newName Der neue Name
+	 * Diese Methode aendert bei einem Kapitel die id des 
+	 * zugehoerigen Buches auf eine andere.
 	 */
-	public void renamePage(int pageID, String newName) throws SQLException;
+	public void move(int chapterID, int newBookId) throws SQLException;
 }

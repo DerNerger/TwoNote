@@ -386,18 +386,18 @@ public class Model {
 		db.renameChapter(chapterID, newName);
 	}
 	
+	
 	/**
-	 * Diese Methode aendert den Namen eines vorhandenen Buches
-	 * @param bookName Name des Buches
+	 * Diese Methode verschiebt ein Kapitel in ein anderes Buch
+	 * @param bookName Name des alten Buches
 	 * @param chapterName Name des Kapitels
-	 * @param pageName alter Name
-	 * @param newName neuer Name
-	 * */
-	public void renamePage(String pageName, String chapterName, String bookName,
-			String newName) throws DirectoryDoesNotExistsException, SQLException
+	 * @param newBook name des neuen Buches
+	 */
+	public void move(String bookName, String chapterName, String newBook)
+		throws SQLException
 	{
-		ActionType e = ActionType.rename;
-		int pageID = getPageID(e, pageName, chapterName, bookName);
-		db.renamePage(pageID, newName);
+		int chapterID = getChapterID(ActionType.move, chapterName, bookName);
+		int newBookId = getBookID(ActionType.move, bookName);
+		db.move(chapterID, newBookId);
 	}
 }
