@@ -32,8 +32,8 @@ public class MySqlDatabase implements IDataBase {
 	
 	//constructor
 	/**
-	 * Der Konstruktor lädt den jdbc Treiber und richtet danach eine Datenbankverbindung mittels
-	 * der übergebenen Daten ein, indem er das Attribut con instanziiert.
+	 * Der Konstruktor l��dt den jdbc Treiber und richtet danach eine Datenbankverbindung mittels
+	 * der ��bergebenen Daten ein, indem er das Attribut con instanziiert.
 	 * @param url der Pfad zur Datenbank
 	 * @param name der Loginname zur Datenbank
 	 * @param pw das Passwort zur Datenbank

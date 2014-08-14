@@ -17,8 +17,8 @@ import javax.swing.JPanel;
 /**
  * Diese Klasse dient der internen Speicherung einer TextBox und ist
  * von Content abgeleitet. Der Content wird durch diese Klasse um
- * einen Text, eine Schriftgröße, eine Schriftfarbe und eine 
- * Hintergrundfarbe ergänzt. Diese Klasse kann auf einem vorgegebenem JPanel
+ * einen Text, eine Schriftgr????e, eine Schriftfarbe und eine 
+ * Hintergrundfarbe erg??nzt. Diese Klasse kann auf einem vorgegebenem JPanel
  * gezeichnet werden. 
  * */
 public class TextBox extends Content implements Serializable {
@@ -108,7 +108,7 @@ public class TextBox extends Content implements Serializable {
 	}
 	
 	/**
-	 * Der Text der TextBox wird zurückgegeben.
+	 * Der Text der TextBox wird zur??ckgegeben.
 	 * @return TextBox.Text
 	 * */
 	@Override

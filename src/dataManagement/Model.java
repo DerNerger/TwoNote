@@ -20,13 +20,13 @@ import pageData.PageInformation;
 
 /**
  * Die Klasse Model dient der Kapselung der Datenhaltung und ist Teil des MVC-Design.
- * Das Model verwaltet die Schnittstelle zur Datenbank und implementiert die nötige
- * Verarbeitungslogik im Umgang mit der Datenbank. Dazu überprüft es die Existenz von
+ * Das Model verwaltet die Schnittstelle zur Datenbank und implementiert die noetige
+ * Verarbeitungslogik im Umgang mit der Datenbank. Dazu ueberprueft es die Existenz von
  * Verzeichnissen und wirft die passenden Exceptions, falls es zu Konflikten in der
  * Verarbeitung kommt. Das Model kann aus dem Pfad eines Elementes die id in der Datenbank
  * bestimmen und diese zur weiteren Verarbeitung nutzen. Zielsetzung dieser Klasse ist ein
- * komfortabler Zugriff auf die Daten, welcher lediglich über Pfadnamen operiert. 
- * Die Komplexität der Datenbank soll somit gekapselt werden und vom Controller aus nicht mehr
+ * komfortabler Zugriff auf die Daten, welcher lediglich ueber Pfadnamen operiert. 
+ * Die Komplexitaet der Datenbank soll somit gekapselt werden und vom Controller aus nicht mehr
  * ersichtlich sein. Die Schnittstelle zum Controller soll minimal gehalten sein. 
  * Das Model serialisiert und deserialisiert den Seiteninhalt, welcher in der Datenbank
  * abgelegt werden soll.
@@ -45,7 +45,7 @@ public class Model {
 	//constructor
 	/**
 	 * Instanziiert die Attribute zum Serializer und db
-	 * Pfad und Logininformationen zur Datenbank sind übergangsweise "hard coded"
+	 * Pfad und Logininformationen zur Datenbank sind uebergangsweise "hard coded"
 	 * */
 	public Model() throws ClassNotFoundException, SQLException
 	{
@@ -57,7 +57,7 @@ public class Model {
 	
 	//create methods
 	/**
-	 * Überprüft ob das zu erstellende Buch bereits existiert, falls nicht
+	 * Ueberprueft ob das zu erstellende Buch bereits existiert, falls nicht
 	 * leitet diese Methode den Auftrag ein Buch zu erstellen an die Datenbankschnittstelle weiter
 	 * @param bookName der Name des Buches
 	 * @throws DirectoryAlreadyExistsException das Buch existiert bereits
@@ -74,7 +74,7 @@ public class Model {
 	
 	/**
 	 * Die id des Buches in welchem das Kapitel gespeichert werden soll wird geladen
-	 * Überprüft ob das zu erstellende Kapitel bereits existiert, falls nicht
+	 * ueberprueft ob das zu erstellende Kapitel bereits existiert, falls nicht
 	 * leitet diese Methode den Auftrag ein Kapitel zu erstellen an die Datenbankschnittstelle weiter
 	 * @param bookName der Name des Buches
 	 * @param chapterName der Name des Kapitels
@@ -94,9 +94,9 @@ public class Model {
 	
 	/**
 	 * Die id des Kapitels in welchem die Seite gespeichert werden soll wird geladen
-	 * Überprüft ob die zu erstellende Seite bereits existiert, falls nicht
+	 * ueberprueft ob die zu erstellende Seite bereits existiert, falls nicht
 	 * leitet diese Methode den Auftrag die Seite zu erstellen an die Datenbankschnittstelle weiter
-	 * Die Attribute der Seite werden mit Defaultwerten gefüllt
+	 * Die Attribute der Seite werden mit Defaultwerten gef��llt
 	 * @param bookName der Name des Buches
 	 * @param chapterName der Name des Kapitels
 	 * @param pageName der Name der Seite
@@ -134,9 +134,9 @@ public class Model {
 	
 	//delete methods
 	/**
-	 * Diese Methode lädt die id des zu löschenden Buches. Falls das Buch nicht existiert 
-	 * wird eine Exception geworfen. Falls das Buch existiert wird es gelöscht.
-	 * Alle Unterverzeichnisse dieses Buches werden durch das dmbs mittels ON DELETE CASCATE gelöscht.
+	 * Diese Methode laedt die id des zu loeschenden Buches. Falls das Buch nicht existiert 
+	 * wird eine Exception geworfen. Falls das Buch existiert wird es geloescht.
+	 * Alle Unterverzeichnisse dieses Buches werden durch das dmbs mittels ON DELETE CASCATE geloescht.
 	 * @param bookName Der Name des Buches
 	 * @throws SQLException Datenbankfehler
 	 * @throws DirectoryDoesNotExistsException das Buch existiert nicht
@@ -151,10 +151,10 @@ public class Model {
 	}
 	
 	/**
-	 * Diese Methode lädt die id des zu löschenden Kapitels. Falls das Buch oder Kapitel
+	 * Diese Methode laedt die id des zu loeschenden Kapitels. Falls das Buch oder Kapitel
 	 * nicht existiert wird eine Exception geworfen. 
-	 * Falls das Kapitel existiert wird es gelöscht.
-	 * Alle Unterverzeichnisse dieses Kapitels werden durch das dmbs mittels ON DELETE CASCATE gelöscht.
+	 * Falls das Kapitel existiert wird es geloescht.
+	 * Alle Unterverzeichnisse dieses Kapitels werden durch das dmbs mittels ON DELETE CASCATE geloescht.
 	 * @param bookName Der Name des Buches
 	 * @param chapterName Der Name des Kapitels
 	 * @throws SQLException Datenbankfehler
@@ -170,10 +170,10 @@ public class Model {
 	}
 	
 	/**
-	 * Diese Methode lädt die id der zu löschenden Seite. Falls das Buch, Kapitel
+	 * Diese Methode laedt die id der zu loeschenden Seite. Falls das Buch, Kapitel
 	 * oder Seite nicht existiert wird eine Exception geworfen. 
-	 * Falls die Seite existiert wird sie gelöscht.
-	 * Alle Unterverzeichnisse dieser Seite werden durch das dmbs mittels ON DELETE CASCATE gelöscht.
+	 * Falls die Seite existiert wird sie geloescht.
+	 * Alle Unterverzeichnisse dieser Seite werden durch das dmbs mittels ON DELETE CASCATE geloescht.
 	 * @param bookName Der Name des Buches
 	 * @param chapterName Der Name des Kapitels
 	 * @param pageName Der Name der Seite
@@ -202,10 +202,10 @@ public class Model {
 	 * Diese Methode speichert eine Seite. Alle Pfadangaben liegen in der PageInformation.
 	 * Die PageInformation beinhalten ebenfalls alle Informationen zum Speichern der Seite.
 	 * Die Schnittstelle zum Controller besteht nur aus dieser Methode, das Speichern der
-	 * Seiteninformation wird bewusst gekapselt und in dieser Methode ebenfalls ausgeführt.
-	 * Jede Seite speichert alle ungespeicherten Änderungen, welche an ihr vorgenommen werden.
-	 * In dieser Methode wird über die Liste der änderungen iteriert und abhängig von der 
-	 * ContentInstruction der Seiteninhalt serialisiert und erstellt, gespeichert oder gelöscht.
+	 * Seiteninformation wird bewusst gekapselt und in dieser Methode ebenfalls ausgefuehrt.
+	 * Jede Seite speichert alle ungespeicherten aenderungen, welche an ihr vorgenommen werden.
+	 * In dieser Methode wird ueber die Liste der aenderungen iteriert und abhaengig von der 
+	 * ContentInstruction der Seiteninhalt serialisiert und erstellt, gespeichert oder geloescht.
 	 * @param page die zu speichernde Seite
 	 * @throws DirectoryDoesNotExistsException die Seite oder ein Seiteninhalt existiert nicht
 	 * @throws SQLException Datenbankfehler
@@ -259,10 +259,10 @@ public class Model {
 
 	// load methods
 	/**
-	 * Es wird überprüft ob der angegebene Pfad gültig ist.
+	 * Es wird ueberprueft ob der angegebene Pfad gueltig ist.
 	 * Das Laden einer Seite besteht aus zwei Schritten. Zuerst wird die PageInformation aus
 	 * der Datenbank abgerufen und ein Objekt der Klasse Page erstellt. Danach wird der
-	 * Seiteninhalt zu dieser Seite geladen, deserialisiert und der Seite zugefügt.
+	 * Seiteninhalt zu dieser Seite geladen, deserialisiert und der Seite zugefuegt.
 	 * @param pageName der Name der Seite
 	 * @param chapterName der Name des Kapitels
 	 * @param bookName der Name des Buches#
@@ -332,8 +332,8 @@ public class Model {
 	//get Tree
 	/**
 	 * Der Verzeichnisbaum wird aus der Datenbank abgerufen und als Objekt der Klasse
-	 * Tree zurückgegeben. Dazu wird iterativ mittels 3 Schleifen immer zuerst das obere
-	 * Level des Baumes erstellt, und dann zu jedem Element dieses Levels die Kindbäume geladen
+	 * Tree zurueckgegeben. Dazu wird iterativ mittels 3 Schleifen immer zuerst das obere
+	 * Level des Baumes erstellt, und dann zu jedem Element dieses Levels die Kindbaeume geladen
 	 * @throws SQLException Datenbankfehler
 	 * @return der Verzeichnisbaum
 	 * */
