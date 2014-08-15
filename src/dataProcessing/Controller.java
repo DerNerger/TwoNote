@@ -109,7 +109,7 @@ public class Controller {
 		{
 		case Text:
 			cont = new TextBox(x, y);
-			//currentTool = new TextEditTool(cont);
+			//currentTool = new TextEditTool(cont); TODO: THIS
 			view.showTool(currentTool);
 			break;
 		default:
@@ -174,8 +174,8 @@ public class Controller {
 	* und als aktuelle Seite gespeichert. Sollte die angeforderte Seite
 	* Startseite sein, wird eine Instanz der Startseite erstellt und in
 	* currentPage gespeichert. Die geladene Seite ist direkt nicht von der
-	* View aus ansprechbar, sondern es muessen die Inhalte oder die PageInformation
-	* ueber die entsprechenden Methoden abgefragt werden.
+	* View aus ansprechbar, sondern es muessen die Inhalte oder die 
+	* PageInformation ueber die entsprechenden Methoden abgefragt werden.
 	* @param pageName der Name der Seite
 	* @param chapterName der Name des Kapitels
 	* @param bookName der Name des Buches
