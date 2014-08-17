@@ -10,4 +10,5 @@ public interface View {
 	void showPage(Content[] content, PageInformation pageInfo);
 	void showMessage(String title, String msg);
 	void showTool(Tool t);
+	void setVisible(boolean flag);
 }

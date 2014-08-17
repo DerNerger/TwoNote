@@ -86,6 +86,20 @@ public class Tree {
 	}
 	
 	/**
+	 * Diese Methode gibt zu einem String den Kindbaaum zurueck, der diesen
+	 * String als Namen eingetragen hat.
+	 * @return Den Kindbaum mit uebergebenem Namen
+	 * @trows RuntimeException der Name ist nicht Vorhanden
+	 */
+	public Tree getChildren(String name)
+	{
+		for(Tree t : children)
+			if(t.title.equals(name))
+				return t;
+		throw new RuntimeException(name + " existiert nicht");
+	}
+	
+	/**
 	 * Diese Methode gibt zurück, ob dieser Baum Kindbäume gespeichert hat.
 	 * @return dieser Baum besitzt Kindbäume
 	 */
@@ -93,4 +107,5 @@ public class Tree {
 	{
 		return children.isEmpty();
 	}
+	
 }

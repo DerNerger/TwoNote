@@ -8,9 +8,10 @@ package dataProcessing;
 import java.io.IOException;
 import java.sql.SQLException;
 
+import GUI.SwingGui;
+import GUI.SwingGuiHandler;
 import GUI.View;
 import Tools.EditMod;
-import Tools.TextEditTool;
 import Tools.Tool;
 
 import dataManagement.Model;
@@ -46,7 +47,9 @@ public class Controller {
 	public Controller()
 	{
 		try {
-			//this.view = new SwingView(this);
+			/* Create and display the form */
+			this.view = new SwingGuiHandler(this);
+			view.setVisible(true);
 			this.model = new Model();
 			refreshTree(); 
 			//this.currentPage = gute default loesung
@@ -315,7 +318,8 @@ public class Controller {
 	
 	private void handleFatalError(Exception e)
 	{
-		view.showMessage("Fataler Fehler!", e.getMessage());
+		String msg = e.getMessage() + "\n Das Programm muss beendet werden";
+		view.showMessage("Fataler Fehler!", msg);
 		System.exit(1);
 	}
 	
