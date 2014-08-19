@@ -4,6 +4,7 @@ import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.event.ActionEvent;
 import java.awt.event.MouseEvent;
+import java.awt.event.WindowEvent;
 
 import javax.swing.JEditorPane;
 import javax.swing.tree.DefaultMutableTreeNode;
@@ -26,32 +27,31 @@ public class SwingGuiHandler extends SwingGui implements View {
 		super();
 		this.setVisible(true);
 		this.con = con;
-		refreshTree((String) jComboBoxCurrentBook.getSelectedItem());
 	}
 
 	//interface view
-	private void refreshTree(String currentBook) {
-		if(currentBook == null)
-		{
-			jTree1.setVisible(false);
-			return;
-		} else
-			jTree1.setVisible(true);
-		
+	@Override
+	public void refreshTree() {
 		Tree tree = con.getTree();
-		Tree book = tree.getChildren(currentBook);
-		DefaultMutableTreeNode bookNode = new DefaultMutableTreeNode(book);
-		for(Tree chapter : book.getChildren())
+		DefaultMutableTreeNode rootNode = 
+				new DefaultMutableTreeNode("Meine Notizen");
+		for(Tree book : tree.getChildren())
 		{
-			DefaultMutableTreeNode chapterNode =
-					new DefaultMutableTreeNode(chapter);
-			for(Tree page : chapter.getChildren())
+			DefaultMutableTreeNode bookNode = 
+					new DefaultMutableTreeNode(book);
+			for(Tree chapter : book.getChildren())
 			{
-				chapterNode.add(new DefaultMutableTreeNode(page));
+				DefaultMutableTreeNode chapterNode =
+						new DefaultMutableTreeNode(chapter);
+				for(Tree page : chapter.getChildren())
+				{
+					chapterNode.add(new DefaultMutableTreeNode(page));
+				}
+				bookNode.add(chapterNode);
 			}
-			bookNode.add(chapterNode);
+			rootNode.add(bookNode);
 		}
-		jTree1.setModel(new DefaultTreeModel(bookNode));
+		jTree1.setModel(new DefaultTreeModel(rootNode));
 	}
 	
 	@Override
@@ -59,18 +59,11 @@ public class SwingGuiHandler extends SwingGui implements View {
 	{
 		jComboBoxBook.removeAllItems();
 		jComboBoxBook2.removeAllItems();
-		jComboBoxCurrentBook.removeAllItems();
 		for(Tree t : con.getTree().getChildren())
 		{
 			jComboBoxBook.addItem(t.toString());
 			jComboBoxBook2.addItem(t.toString());
-			jComboBoxCurrentBook.addItem(t.toString());
 		}
-	}
-	
-	@Override
-	public void openBook(String bookName) {
-		jComboBoxCurrentBook.setSelectedItem(bookName);
 	}
 
 	@Override
@@ -104,11 +97,6 @@ public class SwingGuiHandler extends SwingGui implements View {
 	}
 	
 	//handler
-	@Override
-	protected void jComboBoxCurrentBookActionPerformed(ActionEvent evt) 
-	{
-		refreshTree((String) jComboBoxCurrentBook.getSelectedItem());
-	}
 	
 	@Override
 	protected void jButtonCreateActionPerformed(ActionEvent evt)
@@ -211,5 +199,11 @@ public class SwingGuiHandler extends SwingGui implements View {
 	@Override
 	 protected void jMenuItemExitActionPerformed(ActionEvent evt) {
         con.exit();
+    }
+	
+	@Override
+    protected void jDialogRenameWindowClosed(WindowEvent evt) {
+        jTree1.setEnabled(true);
+        System.out.println("BLAAAAAAAAAA");
     }
 }

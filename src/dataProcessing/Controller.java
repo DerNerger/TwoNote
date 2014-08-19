@@ -52,6 +52,7 @@ public class Controller {
 			this.model = new Model();
 			this.dataTree = model.getTree();
 			this.view.refreshBookComboBox();
+			this.view.refreshTree();
 			//this.currentPage = gute default loesung
 			//this.currentTool = gute default loesung
 			this.editMod = EditMod.Curser;
@@ -73,7 +74,7 @@ public class Controller {
 			
 			dataTree = model.getTree();
 			view.refreshBookComboBox();
-			view.openBook(path[0]);
+			view.refreshTree();
 		} catch (DirectoryAlreadyExistsException 
 				| DirectoryDoesNotExistsException e) {
 			handleError(e);
@@ -114,14 +115,15 @@ public class Controller {
 	public void delete(String[] path)
 	{
 		try {
-			if(path.length == 1)
-				model.deleteBook(path[0]);
-			else if(path.length == 2)
-				model.deleteChapter(path[1], path[0]);
+			if(path.length == 2)
+				model.deleteBook(path[1]);
 			else if(path.length == 3)
-				model.deletePage(path[2], path[1], path[0]);
+				model.deleteChapter(path[2], path[1]);
+			else if(path.length == 4)
+				model.deletePage(path[3], path[2], path[1]);
 			dataTree = model.getTree();
 			view.refreshBookComboBox();
+			view.refreshTree();
 		} catch (SQLException e) {
 			handleFatalError(e);
 		} catch(DirectoryDoesNotExistsException e){
@@ -142,10 +144,10 @@ public class Controller {
 	 * */
 	public void openPage(String[] path) 
 	{
-		if(path.length != 3)
+		if(path.length != 4)
 			return;
 		try {
-			currentPage = model.loadPage(path[2], path[1], path[0]);
+			currentPage = model.loadPage(path[3], path[2], path[1]);
 			Content[] content = currentPage.getContent();
 			PageInformation pageInfo = currentPage.getPageInfo();
 			view.showPage(content, pageInfo);
@@ -160,26 +162,27 @@ public class Controller {
 	public void rename(String[] path, String newName)
 	{
 		try {
-			if(path.length == 1)
-				model.renameBook(path[0], newName);
-			else if (path.length == 2)
-				model.renameChapter(path[1], path[0], newName);
-			else 
+			if(path.length == 2)
+				model.renameBook(path[1], newName);
+			else if (path.length == 3)
+				model.renameChapter(path[2], path[1], newName);
+			else if (path.length == 4)
 			{
-				model.renamePage(path[2], path[1], path[0], newName);
+				model.renamePage(path[3], path[2], path[1], newName);
 				PageInformation info = currentPage.getPageInfo();
 				
-				boolean sameName = info.getPageName().equals(path[2]);
-				boolean sameChapter = info.getChapterName().equals(path[1]);
-				boolean sameBook = info.getBookName().equals(path[0]);
+				boolean sameName = info.getPageName().equals(path[3]);
+				boolean sameChapter = info.getChapterName().equals(path[2]);
+				boolean sameBook = info.getBookName().equals(path[1]);
 				if(sameName && sameChapter && sameBook)//its the current page
 				{
-					path[2] = newName;
+					path[3] = newName;
 					openPage(path);
 				}
 			}
 			this.dataTree = model.getTree();
 			view.refreshBookComboBox();
+			view.refreshTree();
 		} catch (SQLException  e) {
 			handleFatalError(e);
 		} catch(DirectoryDoesNotExistsException |
