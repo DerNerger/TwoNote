@@ -6,8 +6,6 @@
 
 package GUI;
 
-import dataProcessing.Controller;
-
 /**
  *
  * @author felilein
@@ -28,7 +26,7 @@ public class SwingGui extends javax.swing.JFrame {
      */
     @SuppressWarnings("unchecked")
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
-    protected void initComponents() {
+    private void initComponents() {
 
         buttonGroupToolbar = new javax.swing.ButtonGroup();
         jDialogCreate = new javax.swing.JDialog();
@@ -38,16 +36,16 @@ public class SwingGui extends javax.swing.JFrame {
         jLabel1 = new javax.swing.JLabel();
         jPanelCreateChapter = new javax.swing.JPanel();
         jLabel2 = new javax.swing.JLabel();
-        jComboBoxBook = new javax.swing.JComboBox<String>();
+        jComboBoxBook = new javax.swing.JComboBox();
         jLabel3 = new javax.swing.JLabel();
         jTextFieldChapter = new javax.swing.JTextField();
         jPanelCreatePage = new javax.swing.JPanel();
         jLabel4 = new javax.swing.JLabel();
-        jComboBoxBook2 = new javax.swing.JComboBox<String>();
+        jComboBoxBook2 = new javax.swing.JComboBox();
         jLabel5 = new javax.swing.JLabel();
         jLabel6 = new javax.swing.JLabel();
         jTextFieldPage = new javax.swing.JTextField();
-        jComboBoxChapter = new javax.swing.JComboBox<String>();
+        jComboBoxChapter = new javax.swing.JComboBox();
         jButtonCreate = new javax.swing.JButton();
         jDialogError = new javax.swing.JDialog();
         jLabelError = new javax.swing.JLabel();
@@ -57,6 +55,7 @@ public class SwingGui extends javax.swing.JFrame {
         jDialogRename = new javax.swing.JDialog();
         jLabel7 = new javax.swing.JLabel();
         jTextFieldNewName = new javax.swing.JTextField();
+        jButtonRenameNow = new javax.swing.JButton();
         jToolBarTools = new javax.swing.JToolBar();
         jToggleButtonCurser = new javax.swing.JToggleButton();
         jToggleButtonText = new javax.swing.JToggleButton();
@@ -69,7 +68,7 @@ public class SwingGui extends javax.swing.JFrame {
         jScrollPanePage = new javax.swing.JScrollPane();
         jPanelPage = new javax.swing.JPanel();
         jToolBarTool = new javax.swing.JToolBar();
-        jComboBoxCurrentBook = new javax.swing.JComboBox<String>();
+        jComboBoxCurrentBook = new javax.swing.JComboBox();
         jMenuBar1 = new javax.swing.JMenuBar();
         jMenuData = new javax.swing.JMenu();
         jMenuItemPrint = new javax.swing.JMenuItem();
@@ -123,7 +122,7 @@ public class SwingGui extends javax.swing.JFrame {
 
         jLabel3.setText("Name:");
 
-        jTextFieldChapter.setText("neue Seite");
+        jTextFieldChapter.setText("neues Kapitel");
 
         javax.swing.GroupLayout jPanelCreateChapterLayout = new javax.swing.GroupLayout(jPanelCreateChapter);
         jPanelCreateChapter.setLayout(jPanelCreateChapterLayout);
@@ -233,12 +232,14 @@ public class SwingGui extends javax.swing.JFrame {
                 .addContainerGap())
         );
 
-        jDialogError.setMinimumSize(new java.awt.Dimension(513, 232));
+        jDialogError.setMaximumSize(new java.awt.Dimension(513, 252));
+        jDialogError.setMinimumSize(new java.awt.Dimension(513, 252));
 
         jLabelError.setFont(new java.awt.Font("Ubuntu", 0, 20)); // NOI18N
         jLabelError.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
         jLabelError.setText("jLabel7");
 
+        jTextAreaErrorMessage.setEditable(false);
         jTextAreaErrorMessage.setColumns(20);
         jTextAreaErrorMessage.setRows(5);
         jScrollPane3.setViewportView(jTextAreaErrorMessage);
@@ -274,13 +275,21 @@ public class SwingGui extends javax.swing.JFrame {
                 .addComponent(jScrollPane3, javax.swing.GroupLayout.PREFERRED_SIZE, 100, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(20, 20, 20)
                 .addComponent(jButtonClose)
-                .addContainerGap(20, Short.MAX_VALUE))
+                .addContainerGap(40, Short.MAX_VALUE))
         );
 
         jDialogRename.setTitle("Umbenennen");
-        jDialogRename.setMinimumSize(new java.awt.Dimension(354, 128));
+        jDialogRename.setMaximumSize(new java.awt.Dimension(354, 176));
+        jDialogRename.setMinimumSize(new java.awt.Dimension(354, 176));
 
         jLabel7.setText("Neuer Name:");
+
+        jButtonRenameNow.setText("Umbenennen");
+        jButtonRenameNow.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jButtonRenameNowActionPerformed(evt);
+            }
+        });
 
         javax.swing.GroupLayout jDialogRenameLayout = new javax.swing.GroupLayout(jDialogRename.getContentPane());
         jDialogRename.getContentPane().setLayout(jDialogRenameLayout);
@@ -288,9 +297,12 @@ public class SwingGui extends javax.swing.JFrame {
             jDialogRenameLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jDialogRenameLayout.createSequentialGroup()
                 .addGap(50, 50, 50)
-                .addComponent(jLabel7)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(jTextFieldNewName, javax.swing.GroupLayout.PREFERRED_SIZE, 150, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGroup(jDialogRenameLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                    .addComponent(jButtonRenameNow, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addGroup(jDialogRenameLayout.createSequentialGroup()
+                        .addComponent(jLabel7)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(jTextFieldNewName, javax.swing.GroupLayout.PREFERRED_SIZE, 150, javax.swing.GroupLayout.PREFERRED_SIZE)))
                 .addGap(50, 50, 50))
         );
         jDialogRenameLayout.setVerticalGroup(
@@ -300,6 +312,8 @@ public class SwingGui extends javax.swing.JFrame {
                 .addGroup(jDialogRenameLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
                     .addComponent(jTextFieldNewName)
                     .addComponent(jLabel7, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                .addGap(18, 18, 18)
+                .addComponent(jButtonRenameNow)
                 .addContainerGap(50, Short.MAX_VALUE))
         );
 
@@ -311,7 +325,7 @@ public class SwingGui extends javax.swing.JFrame {
         jToolBarTools.setRollover(true);
 
         buttonGroupToolbar.add(jToggleButtonCurser);
-        jToggleButtonCurser.setIcon(new javax.swing.ImageIcon("pictures/curserBild.png")); // NOI18N
+        jToggleButtonCurser.setIcon(new javax.swing.ImageIcon(getClass().getResource("/pictures/curserBild.png"))); // NOI18N
         jToggleButtonCurser.setSelected(true);
         jToggleButtonCurser.setText("Zeiger");
         jToggleButtonCurser.setFocusable(false);
@@ -325,7 +339,7 @@ public class SwingGui extends javax.swing.JFrame {
         jToolBarTools.add(jToggleButtonCurser);
 
         buttonGroupToolbar.add(jToggleButtonText);
-        jToggleButtonText.setIcon(new javax.swing.ImageIcon("pictures/textBild.png")); // NOI18N
+        jToggleButtonText.setIcon(new javax.swing.ImageIcon(getClass().getResource("/pictures/textBild.png"))); // NOI18N
         jToggleButtonText.setText("Text");
         jToggleButtonText.setFocusable(false);
         jToggleButtonText.setHorizontalTextPosition(javax.swing.SwingConstants.CENTER);
@@ -548,89 +562,93 @@ public class SwingGui extends javax.swing.JFrame {
         pack();
     }// </editor-fold>//GEN-END:initComponents
 
-    protected void jMenuItemUndoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jMenuItemUndoActionPerformed
+    private void jMenuItemUndoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jMenuItemUndoActionPerformed
         // TODO add your handling code here:
     }//GEN-LAST:event_jMenuItemUndoActionPerformed
 
-    protected void jMenuItemPrintActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jMenuItemPrintActionPerformed
+    private void jMenuItemPrintActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jMenuItemPrintActionPerformed
         // TODO add your handling code here:
     }//GEN-LAST:event_jMenuItemPrintActionPerformed
 
-    protected void jMenuItemExitActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jMenuItemExitActionPerformed
+    private void jMenuItemExitActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jMenuItemExitActionPerformed
         // TODO add your handling code here:
     }//GEN-LAST:event_jMenuItemExitActionPerformed
 
-    protected void jMenuItemAboutActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jMenuItemAboutActionPerformed
+    private void jMenuItemAboutActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jMenuItemAboutActionPerformed
         // TODO add your handling code here:
     }//GEN-LAST:event_jMenuItemAboutActionPerformed
 
-    protected void jMenuItemStartpageActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jMenuItemStartpageActionPerformed
+    private void jMenuItemStartpageActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jMenuItemStartpageActionPerformed
         // TODO add your handling code here:
     }//GEN-LAST:event_jMenuItemStartpageActionPerformed
 
-    protected void jMenuItemExportPdfActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jMenuItemExportPdfActionPerformed
+    private void jMenuItemExportPdfActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jMenuItemExportPdfActionPerformed
         // TODO add your handling code here:
     }//GEN-LAST:event_jMenuItemExportPdfActionPerformed
 
-    protected void jMenuItemImportPictureActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jMenuItemImportPictureActionPerformed
+    private void jMenuItemImportPictureActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jMenuItemImportPictureActionPerformed
         // TODO add your handling code here:
     }//GEN-LAST:event_jMenuItemImportPictureActionPerformed
 
-    protected void jMenuItemImportPdfActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jMenuItemImportPdfActionPerformed
+    private void jMenuItemImportPdfActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jMenuItemImportPdfActionPerformed
         // TODO add your handling code here:
     }//GEN-LAST:event_jMenuItemImportPdfActionPerformed
 
-    protected void jMenuItemSearchActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jMenuItemSearchActionPerformed
+    private void jMenuItemSearchActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jMenuItemSearchActionPerformed
         // TODO add your handling code here:
     }//GEN-LAST:event_jMenuItemSearchActionPerformed
 
-    protected void jMenuItemRedoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jMenuItemRedoActionPerformed
+    private void jMenuItemRedoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jMenuItemRedoActionPerformed
         // TODO add your handling code here:
     }//GEN-LAST:event_jMenuItemRedoActionPerformed
 
-    protected void jToggleButtonCurserActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jToggleButtonCurserActionPerformed
+    private void jToggleButtonCurserActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jToggleButtonCurserActionPerformed
         // TODO add your handling code here:
     }//GEN-LAST:event_jToggleButtonCurserActionPerformed
 
-    protected void jToggleButtonTextActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jToggleButtonTextActionPerformed
+    private void jToggleButtonTextActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jToggleButtonTextActionPerformed
         // TODO add your handling code here:
     }//GEN-LAST:event_jToggleButtonTextActionPerformed
 
-    protected void jButtonCreateActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButtonCreateActionPerformed
+    private void jButtonCreateActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButtonCreateActionPerformed
         // TODO add your handling code here:
     }//GEN-LAST:event_jButtonCreateActionPerformed
 
-    protected void jButtonNewActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButtonNewActionPerformed
+    private void jButtonNewActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButtonNewActionPerformed
         jDialogCreate.setVisible(true);
     }//GEN-LAST:event_jButtonNewActionPerformed
 
-    protected void jButtonRenameActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButtonRenameActionPerformed
-        // TODO add your handling code here:
+    private void jButtonRenameActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButtonRenameActionPerformed
+        jDialogRename.setVisible(true);
     }//GEN-LAST:event_jButtonRenameActionPerformed
 
-    protected void jButtonDeleteActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButtonDeleteActionPerformed
+    private void jButtonDeleteActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButtonDeleteActionPerformed
         // TODO add your handling code here:
     }//GEN-LAST:event_jButtonDeleteActionPerformed
 
-    protected void jButtonCloseActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButtonCloseActionPerformed
+    private void jButtonCloseActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButtonCloseActionPerformed
         jDialogError.setVisible(false);
     }//GEN-LAST:event_jButtonCloseActionPerformed
 
-    protected void jComboBoxBook2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jComboBoxBook2ActionPerformed
+    private void jComboBoxBook2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jComboBoxBook2ActionPerformed
         // TODO add your handling code here:
     }//GEN-LAST:event_jComboBoxBook2ActionPerformed
 
-    protected void jTree1MousePressed(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jTree1MousePressed
+    private void jTree1MousePressed(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jTree1MousePressed
         // TODO add your handling code here:
     }//GEN-LAST:event_jTree1MousePressed
 
-    protected void jComboBoxCurrentBookActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jComboBoxCurrentBookActionPerformed
+    private void jComboBoxCurrentBookActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jComboBoxCurrentBookActionPerformed
         // TODO add your handling code here:
     }//GEN-LAST:event_jComboBoxCurrentBookActionPerformed
 
-    protected void jTree1MouseReleased(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jTree1MouseReleased
+    private void jTree1MouseReleased(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jTree1MouseReleased
         // TODO add your handling code here:
     }//GEN-LAST:event_jTree1MouseReleased
+
+    private void jButtonRenameNowActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButtonRenameNowActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_jButtonRenameNowActionPerformed
 
     /**
      * @param args the command line arguments
@@ -662,67 +680,68 @@ public class SwingGui extends javax.swing.JFrame {
         /* Create and display the form */
         java.awt.EventQueue.invokeLater(new Runnable() {
             public void run() {
-                new Controller();
+                new SwingGui().setVisible(true);
             }
         });
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
-    protected javax.swing.ButtonGroup buttonGroupToolbar;
-    protected javax.swing.JButton jButtonClose;
-    protected javax.swing.JButton jButtonCreate;
-    protected javax.swing.JButton jButtonDelete;
-    protected javax.swing.JButton jButtonNew;
-    protected javax.swing.JButton jButtonRename;
-    protected javax.swing.JComboBox<String> jComboBoxBook;
-    protected javax.swing.JComboBox<String> jComboBoxBook2;
-    protected javax.swing.JComboBox<String> jComboBoxChapter;
-    protected javax.swing.JComboBox<String> jComboBoxCurrentBook;
-    protected javax.swing.JDialog jDialogCreate;
-    protected javax.swing.JDialog jDialogError;
-    protected javax.swing.JDialog jDialogRename;
-    protected javax.swing.JLabel jLabel1;
-    protected javax.swing.JLabel jLabel2;
-    protected javax.swing.JLabel jLabel3;
-    protected javax.swing.JLabel jLabel4;
-    protected javax.swing.JLabel jLabel5;
-    protected javax.swing.JLabel jLabel6;
-    protected javax.swing.JLabel jLabel7;
-    protected javax.swing.JLabel jLabelError;
-    protected javax.swing.JMenuBar jMenuBar1;
-    protected javax.swing.JMenu jMenuData;
-    protected javax.swing.JMenu jMenuEdit;
-    protected javax.swing.JMenu jMenuExport;
-    protected javax.swing.JMenu jMenuHelp;
-    protected javax.swing.JMenu jMenuImport;
-    protected javax.swing.JMenuItem jMenuItemAbout;
-    protected javax.swing.JMenuItem jMenuItemExit;
-    protected javax.swing.JMenuItem jMenuItemExportPdf;
-    protected javax.swing.JMenuItem jMenuItemImportPdf;
-    protected javax.swing.JMenuItem jMenuItemImportPicture;
-    protected javax.swing.JMenuItem jMenuItemPrint;
-    protected javax.swing.JMenuItem jMenuItemRedo;
-    protected javax.swing.JMenuItem jMenuItemSearch;
-    protected javax.swing.JMenuItem jMenuItemStartpage;
-    protected javax.swing.JMenuItem jMenuItemUndo;
-    protected javax.swing.JPanel jPanelCreateBook;
-    protected javax.swing.JPanel jPanelCreateChapter;
-    protected javax.swing.JPanel jPanelCreatePage;
-    protected javax.swing.JPanel jPanelPage;
-    protected javax.swing.JScrollPane jScrollPane1;
-    protected javax.swing.JScrollPane jScrollPane3;
-    protected javax.swing.JScrollPane jScrollPanePage;
-    protected javax.swing.JTabbedPane jTabbedPane1;
-    protected javax.swing.JTabbedPane jTabbedPaneCreate;
-    protected javax.swing.JTextArea jTextAreaErrorMessage;
-    protected javax.swing.JTextField jTextFieldBook;
-    protected javax.swing.JTextField jTextFieldChapter;
-    protected javax.swing.JTextField jTextFieldNewName;
-    protected javax.swing.JTextField jTextFieldPage;
-    protected javax.swing.JToggleButton jToggleButtonCurser;
-    protected javax.swing.JToggleButton jToggleButtonText;
-    protected javax.swing.JToolBar jToolBarTool;
-    protected javax.swing.JToolBar jToolBarTools;
-    protected javax.swing.JTree jTree1;
+    private javax.swing.ButtonGroup buttonGroupToolbar;
+    private javax.swing.JButton jButtonClose;
+    private javax.swing.JButton jButtonCreate;
+    private javax.swing.JButton jButtonDelete;
+    private javax.swing.JButton jButtonNew;
+    private javax.swing.JButton jButtonRename;
+    private javax.swing.JButton jButtonRenameNow;
+    private javax.swing.JComboBox jComboBoxBook;
+    private javax.swing.JComboBox jComboBoxBook2;
+    private javax.swing.JComboBox jComboBoxChapter;
+    private javax.swing.JComboBox jComboBoxCurrentBook;
+    private javax.swing.JDialog jDialogCreate;
+    private javax.swing.JDialog jDialogError;
+    private javax.swing.JDialog jDialogRename;
+    private javax.swing.JLabel jLabel1;
+    private javax.swing.JLabel jLabel2;
+    private javax.swing.JLabel jLabel3;
+    private javax.swing.JLabel jLabel4;
+    private javax.swing.JLabel jLabel5;
+    private javax.swing.JLabel jLabel6;
+    private javax.swing.JLabel jLabel7;
+    private javax.swing.JLabel jLabelError;
+    private javax.swing.JMenuBar jMenuBar1;
+    private javax.swing.JMenu jMenuData;
+    private javax.swing.JMenu jMenuEdit;
+    private javax.swing.JMenu jMenuExport;
+    private javax.swing.JMenu jMenuHelp;
+    private javax.swing.JMenu jMenuImport;
+    private javax.swing.JMenuItem jMenuItemAbout;
+    private javax.swing.JMenuItem jMenuItemExit;
+    private javax.swing.JMenuItem jMenuItemExportPdf;
+    private javax.swing.JMenuItem jMenuItemImportPdf;
+    private javax.swing.JMenuItem jMenuItemImportPicture;
+    private javax.swing.JMenuItem jMenuItemPrint;
+    private javax.swing.JMenuItem jMenuItemRedo;
+    private javax.swing.JMenuItem jMenuItemSearch;
+    private javax.swing.JMenuItem jMenuItemStartpage;
+    private javax.swing.JMenuItem jMenuItemUndo;
+    private javax.swing.JPanel jPanelCreateBook;
+    private javax.swing.JPanel jPanelCreateChapter;
+    private javax.swing.JPanel jPanelCreatePage;
+    private javax.swing.JPanel jPanelPage;
+    private javax.swing.JScrollPane jScrollPane1;
+    private javax.swing.JScrollPane jScrollPane3;
+    private javax.swing.JScrollPane jScrollPanePage;
+    private javax.swing.JTabbedPane jTabbedPane1;
+    private javax.swing.JTabbedPane jTabbedPaneCreate;
+    private javax.swing.JTextArea jTextAreaErrorMessage;
+    private javax.swing.JTextField jTextFieldBook;
+    private javax.swing.JTextField jTextFieldChapter;
+    private javax.swing.JTextField jTextFieldNewName;
+    private javax.swing.JTextField jTextFieldPage;
+    private javax.swing.JToggleButton jToggleButtonCurser;
+    private javax.swing.JToggleButton jToggleButtonText;
+    private javax.swing.JToolBar jToolBarTool;
+    private javax.swing.JToolBar jToolBarTools;
+    private javax.swing.JTree jTree1;
     // End of variables declaration//GEN-END:variables
 }
