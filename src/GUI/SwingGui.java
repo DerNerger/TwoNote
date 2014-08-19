@@ -54,7 +54,7 @@ public class SwingGui extends javax.swing.JFrame {
         jButtonClose = new javax.swing.JButton();
         jDialogRename = new javax.swing.JDialog();
         jLabel7 = new javax.swing.JLabel();
-        jTextField1 = new javax.swing.JTextField();
+        jTextFieldNewName = new javax.swing.JTextField();
         jToolBarTools = new javax.swing.JToolBar();
         jToggleButtonCurser = new javax.swing.JToggleButton();
         jToggleButtonText = new javax.swing.JToggleButton();
@@ -288,7 +288,7 @@ public class SwingGui extends javax.swing.JFrame {
                 .addGap(50, 50, 50)
                 .addComponent(jLabel7)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(jTextField1, javax.swing.GroupLayout.PREFERRED_SIZE, 150, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addComponent(jTextFieldNewName, javax.swing.GroupLayout.PREFERRED_SIZE, 150, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(50, 50, 50))
         );
         jDialogRenameLayout.setVerticalGroup(
@@ -296,7 +296,7 @@ public class SwingGui extends javax.swing.JFrame {
             .addGroup(jDialogRenameLayout.createSequentialGroup()
                 .addGap(50, 50, 50)
                 .addGroup(jDialogRenameLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                    .addComponent(jTextField1)
+                    .addComponent(jTextFieldNewName)
                     .addComponent(jLabel7, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
                 .addContainerGap(50, Short.MAX_VALUE))
         );
@@ -538,7 +538,7 @@ public class SwingGui extends javax.swing.JFrame {
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addComponent(jComboBoxCurrentBook, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 485, Short.MAX_VALUE))
+                        .addComponent(jScrollPane1))
                     .addComponent(jTabbedPane1))
                 .addContainerGap())
         );
@@ -713,9 +713,9 @@ public class SwingGui extends javax.swing.JFrame {
     private javax.swing.JTabbedPane jTabbedPane1;
     private javax.swing.JTabbedPane jTabbedPaneCreate;
     private javax.swing.JTextArea jTextAreaErrorMessage;
-    private javax.swing.JTextField jTextField1;
     private javax.swing.JTextField jTextFieldBook;
     private javax.swing.JTextField jTextFieldChapter;
+    private javax.swing.JTextField jTextFieldNewName;
     private javax.swing.JTextField jTextFieldPage;
     private javax.swing.JToggleButton jToggleButtonCurser;
     private javax.swing.JToggleButton jToggleButtonText;
