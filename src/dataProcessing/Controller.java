@@ -8,7 +8,6 @@ package dataProcessing;
 import java.io.IOException;
 import java.sql.SQLException;
 
-import GUI.SwingGui;
 import GUI.SwingGuiHandler;
 import GUI.View;
 import Tools.EditMod;
@@ -51,7 +50,8 @@ public class Controller {
 			this.view = new SwingGuiHandler(this);
 			view.setVisible(true);
 			this.model = new Model();
-			refreshTree(); 
+			this.dataTree = model.getTree();
+			this.view.refreshBookComboBox();
 			//this.currentPage = gute default loesung
 			//this.currentTool = gute default loesung
 			this.editMod = EditMod.Curser;
@@ -61,35 +61,19 @@ public class Controller {
 	}
 	
 	//create
-	public void createBook(String bookName)
+	public void create(String[] path)
 	{
 		try {
-			model.createBook(bookName);
-			refreshTree();
-		} catch (DirectoryAlreadyExistsException e) {
-			handleError(e);
-		} catch (SQLException e) {
-			handleFatalError(e);
-		}
-	}
-	
-	public void createChapter(String chapterName, String bookName)
-	{
-		try {
-			model.createChapter(chapterName, bookName);
-			refreshTree();
-		} catch (DirectoryAlreadyExistsException e) {
-			handleError(e);
-		} catch (SQLException e) {
-			handleFatalError(e);
-		}
-	}
-	
-	public void createPage(String pageName, String chapterName, String bookName)
-	{
-		try {
-			model.createPage(pageName, chapterName, bookName);
-			refreshTree();
+			if(path.length == 1)
+				model.createBook(path[0]);
+			else if(path.length == 2)
+				model.createChapter(path[1], path[0]);
+			else if(path.length == 3)
+				model.createPage(path[2], path[1], path[0]);
+			
+			dataTree = model.getTree();
+			view.refreshBookComboBox();
+			view.openBook(path[0]);
 		} catch (DirectoryAlreadyExistsException e) {
 			handleError(e);
 		} catch (SQLException e) {
@@ -126,20 +110,17 @@ public class Controller {
 	}
 	
 	//delete
-	public void delete(String path)
+	public void delete(String[] path)
 	{
 		try {
-			String[] pathParts = path.split(", ");
-			//remove the [ in front of the path
-			pathParts[0] = pathParts[0].substring(1, pathParts[0].length());
-			if( pathParts.length == 1) //is it a book ?
-				deleteBook(pathParts[0]);
-			else
-				if( pathParts.length == 2) // is it a chapter ?
-					deleteChapter(pathParts[0], pathParts[1]);
-				else // it is a page
-					deletePage(pathParts[0], pathParts[1], pathParts[2]);
-			refreshTree();
+			if(path.length == 1)
+				model.deleteBook(path[0]);
+			else if(path.length == 2)
+				model.deleteChapter(path[1], path[0]);
+			else if(path.length == 3)
+				model.deletePage(path[2], path[1], path[0]);
+			dataTree = model.getTree();
+			view.refreshBookComboBox();
 		} catch (SQLException e) {
 			handleFatalError(e);
 		} catch(DirectoryDoesNotExistsException e){
@@ -147,31 +128,6 @@ public class Controller {
 		}
 	}
 	
-	private void deleteBook(String book) 
-			throws DirectoryDoesNotExistsException, SQLException
-	{
-		//remove the ] at the end of the path
-		book = book.substring(0, book.length()-1);
-		model.deleteBook(book); //delete it in dataBase
-	}
-	
-	private void deleteChapter(String book, String chapter) 
-			throws DirectoryDoesNotExistsException, SQLException
-	{
-		//remove the ] at the end of the path
-		chapter = chapter.substring(0, chapter.length()-1);
-		model.deleteChapter(chapter, book); //delete it in dataBase
-	}
-	
-	private void deletePage(String book, String chapter, String page) 
-			throws DirectoryDoesNotExistsException, SQLException
-	{
-		//remove the ] at the end of the path
-		page = page.substring(0, page.length()-1);
-		model.deletePage(page, chapter, book); //delete it in dataBase
-	}
-	
-	//load Page
 	/**
 	* Es zu einem vorgegebenen Pfad eine Seite aus dem Model geladen
 	* und als aktuelle Seite gespeichert. Sollte die angeforderte Seite
@@ -183,10 +139,12 @@ public class Controller {
 	* @param chapterName der Name des Kapitels
 	* @param bookName der Name des Buches
 	 * */
-	public void openPage(String pageName, String chapterName, String bookName) 
+	public void openPage(String[] path) 
 	{
+		if(path.length != 3)
+			return;
 		try {
-			currentPage = model.loadPage(pageName, chapterName, bookName);
+			currentPage = model.loadPage(path[2], path[1], path[0]);
 			Content[] content = currentPage.getContent();
 			PageInformation pageInfo = currentPage.getPageInfo();
 			view.showPage(content, pageInfo);
@@ -211,7 +169,7 @@ public class Controller {
 					renameChapter(pathParts[0], pathParts[1], newName);
 				else // it is a page
 					renamePage(pathParts[0],pathParts[1],pathParts[2],newName);
-			refreshTree();
+			//refreshTree();
 		} catch (SQLException | ClassNotFoundException | IOException e) {
 			handleFatalError(e);
 		} catch(DirectoryDoesNotExistsException e){
@@ -279,7 +237,7 @@ public class Controller {
 					movePage(oldPage, oldChapter, oldBook, newChapter, newBook);
 				}
 			}
-			refreshTree();
+			//refreshTree();
 		} catch (SQLException | ClassNotFoundException | IOException e) {
 			handleFatalError(e);
 		} catch(DirectoryDoesNotExistsException e){
@@ -306,15 +264,6 @@ public class Controller {
 		model.savePage(tempPage);
 	}
 	
-	private void refreshTree()
-	{
-		try {
-			dataTree = model.getTree();
-			view.refreshTree(dataTree);
-		} catch (SQLException e) {
-			handleFatalError(e);
-		}
-	}
 	
 	private void handleFatalError(Exception e)
 	{
@@ -326,5 +275,10 @@ public class Controller {
 	private void handleError(Exception e)
 	{
 		view.showMessage("Warnung", e.getMessage());
+	}
+	
+	public Tree getTree()
+	{
+		return dataTree;
 	}
 }

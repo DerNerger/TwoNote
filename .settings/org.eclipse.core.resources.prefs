@@ -1,4 +1,5 @@
 eclipse.preferences.version=1
+encoding//src/GUI/SwingGui.java=UTF-8
 encoding//src/dataManagement/Model.java=UTF-8
 encoding//src/dataManagement/MySqlDatabase.java=UTF-8
 encoding//src/dataProcessing/Controller.java=UTF-8

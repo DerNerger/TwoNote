@@ -38,16 +38,16 @@ public class SwingGui extends javax.swing.JFrame {
         jLabel1 = new javax.swing.JLabel();
         jPanelCreateChapter = new javax.swing.JPanel();
         jLabel2 = new javax.swing.JLabel();
-        jComboBoxBook = new javax.swing.JComboBox();
+        jComboBoxBook = new javax.swing.JComboBox<>();
         jLabel3 = new javax.swing.JLabel();
         jTextFieldPage = new javax.swing.JTextField();
         jPanelCreatePage = new javax.swing.JPanel();
         jLabel4 = new javax.swing.JLabel();
-        jComboBoxBook2 = new javax.swing.JComboBox();
+        jComboBoxBook2 = new javax.swing.JComboBox<>();
         jLabel5 = new javax.swing.JLabel();
         jLabel6 = new javax.swing.JLabel();
         jTextField1 = new javax.swing.JTextField();
-        jComboBoxChapter = new javax.swing.JComboBox();
+        jComboBoxChapter = new javax.swing.JComboBox<>();
         jButtonCreate = new javax.swing.JButton();
         jDialogError = new javax.swing.JDialog();
         jLabelError = new javax.swing.JLabel();
@@ -65,7 +65,7 @@ public class SwingGui extends javax.swing.JFrame {
         jTabbedPane1 = new javax.swing.JTabbedPane();
         jScrollPane2 = new javax.swing.JScrollPane();
         jToolBarTool = new javax.swing.JToolBar();
-        jComboBoxCurrentBook = new javax.swing.JComboBox();
+        jComboBoxCurrentBook = new javax.swing.JComboBox<>();
         jMenuBar1 = new javax.swing.JMenuBar();
         jMenuData = new javax.swing.JMenu();
         jMenuItemPrint = new javax.swing.JMenuItem();
@@ -237,7 +237,7 @@ public class SwingGui extends javax.swing.JFrame {
         jTextAreaErrorMessage.setRows(5);
         jScrollPane3.setViewportView(jTextAreaErrorMessage);
 
-        jButtonClose.setText("Schließen");
+        jButtonClose.setText("Schlie��en");
         jButtonClose.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 jButtonCloseActionPerformed(evt);
@@ -321,7 +321,7 @@ public class SwingGui extends javax.swing.JFrame {
             }
         });
 
-        jButtonDelete.setText("Löschen");
+        jButtonDelete.setText("L��schen");
         jButtonDelete.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 jButtonDeleteActionPerformed(evt);
@@ -370,7 +370,7 @@ public class SwingGui extends javax.swing.JFrame {
 
         jMenuEdit.setText("Bearbeiten");
 
-        jMenuItemUndo.setText("Rückgängig");
+        jMenuItemUndo.setText("R��ckg��ngig");
         jMenuItemUndo.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 jMenuItemUndoActionPerformed(evt);
@@ -616,10 +616,10 @@ public class SwingGui extends javax.swing.JFrame {
     protected javax.swing.JButton jButtonDelete;
     protected javax.swing.JButton jButtonNew;
     protected javax.swing.JButton jButtonRename;
-    protected javax.swing.JComboBox jComboBoxBook;
-    protected javax.swing.JComboBox jComboBoxBook2;
-    protected javax.swing.JComboBox jComboBoxChapter;
-    protected javax.swing.JComboBox jComboBoxCurrentBook;
+    protected javax.swing.JComboBox<String> jComboBoxBook;
+    protected javax.swing.JComboBox<String> jComboBoxBook2;
+    protected javax.swing.JComboBox<String> jComboBoxChapter;
+    protected javax.swing.JComboBox<String> jComboBoxCurrentBook;
     protected javax.swing.JDialog jDialogCreate;
     protected javax.swing.JDialog jDialogError;
     protected javax.swing.JLabel jLabel1;

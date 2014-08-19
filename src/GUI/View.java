@@ -6,7 +6,8 @@ import pageData.PageInformation;
 import dataManagement.Tree;
 
 public interface View {
-	void refreshTree(Tree t);
+	void refreshBookComboBox();
+	void openBook(String bookName);
 	void showPage(Content[] content, PageInformation pageInfo);
 	void showMessage(String title, String msg);
 	void showTool(Tool t);
