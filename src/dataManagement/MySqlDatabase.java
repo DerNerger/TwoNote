@@ -600,7 +600,7 @@ public class MySqlDatabase implements IDataBase {
 		Statement stmt =null;
 		try  {		
 			stmt = con.createStatement();
-			String query="UPDATE `Books` SET Name = '"+newName+"', WHERE ID= '"+bookID+"';";
+			String query="UPDATE `Books` SET Name = '"+newName+"' WHERE ID= '"+bookID+"';";
 			stmt.executeUpdate(query);
 		}
 		finally
@@ -618,7 +618,25 @@ public class MySqlDatabase implements IDataBase {
 		Statement stmt =null;
 		try  {		
 			stmt = con.createStatement();
-			String query="UPDATE `Chapter` SET Name = '"+newName+"', WHERE ID= '"+chapterID+"';";
+			String query="UPDATE `Chapter` SET Name = '"+newName+"' WHERE ID= '"+chapterID+"';";
+			stmt.executeUpdate(query);
+		}
+		finally
+		{
+			if(stmt!=null) stmt.close();
+		}
+	}
+	
+	/**
+	 * {@inheritDoc}
+	 * */
+	@Override
+	public void renamePage(int pageID, String newName) throws SQLException
+	{
+		Statement stmt =null;
+		try  {		
+			stmt = con.createStatement();
+			String query="UPDATE `Pages` SET Name = '"+newName+"' WHERE ID= '"+pageID+"';";
 			stmt.executeUpdate(query);
 		}
 		finally
@@ -637,7 +655,7 @@ public class MySqlDatabase implements IDataBase {
 		Statement stmt =null;
 		try  {		
 			stmt = con.createStatement();
-			String query="UPDATE `Chapter` SET Book = '"+newBookId+"', WHERE ID= '"+chapterID+"';";
+			String query="UPDATE `Chapter` SET Book = '"+newBookId+"' WHERE ID= '"+chapterID+"';";
 			stmt.executeUpdate(query);
 		}
 		finally

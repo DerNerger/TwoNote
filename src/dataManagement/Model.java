@@ -369,6 +369,10 @@ public class Model {
 	public void renameBook(String bookName, String newName) 
 			throws DirectoryDoesNotExistsException, SQLException
 	{
+		if(db.existsBook(newName))
+			throw new DirectoryAlreadyExistsException
+				(DirectoryType.Book, ActionType.rename, newName);
+		
 		int bookID = getBookID(ActionType.rename, bookName);
 		db.renameBook(bookID, newName);
 	}
@@ -380,12 +384,32 @@ public class Model {
 	 * @param newName neuer Name
 	 * */
 	public void renameChapter(String chapterName, String bookName, 
-			String newName) throws DirectoryDoesNotExistsException, SQLException
+			String newName) throws DirectoryDoesNotExistsException, 
+			SQLException, DirectoryDoesNotExistsException
 	{
+		int bookID = getBookID(ActionType.rename, bookName);
+		if(db.existsChapter(newName, bookID))
+			throw new DirectoryAlreadyExistsException
+				(DirectoryType.Chapter, ActionType.rename, newName);
+		
 		int chapterID = getChapterID(ActionType.rename, chapterName, bookName);
 		db.renameChapter(chapterID, newName);
 	}
 	
+	public void renamePage(String pageName, String chapterName, 
+			String bookName, String newName) 
+			throws DirectoryDoesNotExistsException, SQLException,
+			DirectoryAlreadyExistsException
+	{
+		ActionType type = ActionType.rename;
+		int chapterID = getChapterID(type, chapterName, bookName);
+		if(db.existsPage(newName, chapterID))
+			throw new DirectoryAlreadyExistsException
+				(DirectoryType.Page, type, newName);
+		
+		int pageID = getPageID(type, pageName, chapterName, bookName);
+		db.renamePage(pageID, newName);
+	}
 	
 	/**
 	 * Diese Methode verschiebt ein Kapitel in ein anderes Buch

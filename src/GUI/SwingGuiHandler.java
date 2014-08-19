@@ -5,6 +5,7 @@ import java.awt.Dimension;
 import java.awt.event.ActionEvent;
 import java.awt.event.MouseEvent;
 
+import javax.swing.JEditorPane;
 import javax.swing.tree.DefaultMutableTreeNode;
 import javax.swing.tree.DefaultTreeModel;
 import javax.swing.tree.TreePath;
@@ -152,7 +153,6 @@ public class SwingGuiHandler extends SwingGui implements View {
 	
 	@Override
     protected void jButtonDeleteActionPerformed(ActionEvent evt) {
-		String currentBook = (String) jComboBoxCurrentBook.getSelectedItem();
     	TreePath[] treePaths =  jTree1.getSelectionPaths();
     	for(TreePath treePath : treePaths)
     	{
@@ -161,13 +161,8 @@ public class SwingGuiHandler extends SwingGui implements View {
     		for (int i = 0; i < pathString.length; i++) {
     			pathString[i] = path[i].toString();
 			}
-    		if(currentBook.equals(pathString[0]))//deleteCurrentBook
-    			currentBook = null;
     		con.delete(pathString);
     	}
-    	
-    	if(currentBook != null) //go back to currentBook
-    		jComboBoxCurrentBook.setSelectedItem(currentBook);
     }
 	
 	@Override
@@ -181,5 +176,40 @@ public class SwingGuiHandler extends SwingGui implements View {
         	pathString[i] = path[i].toString();
 		}
         con.openPage(pathString);
+    }
+	
+	@Override
+    protected void jButtonRenameActionPerformed(ActionEvent evt) {
+		TreePath path = jTree1.getSelectionPath();
+		if(path == null)
+		{
+			showMessage("Warnung", "Es wurde kein Verzeichnis ausgewaehlt.");
+		}
+		else
+		{
+			jTree1.setEnabled(false);
+			String t = path.getPathComponent(path.getPathCount()-1).toString();
+			jTextFieldNewName.setText(t);
+			jDialogRename.setVisible(true);
+		}
+    }
+	
+	@Override
+    protected void jButtonRenameNowActionPerformed(ActionEvent evt) {
+    	Object[] treePath = jTree1.getSelectionPath().getPath();
+    	String[] path = new String[treePath.length];
+    	for (int i = 0; i < path.length; i++) {
+			path[i] = treePath[i].toString();
+		}
+    	String newName = jTextFieldNewName.getText();
+    	con.rename(path, newName);
+    	jDialogRename.setVisible(false);
+    	jTree1.setEnabled(true);
+    	jTextFieldNewName.setText("");
+    }
+	
+	@Override
+	 protected void jMenuItemExitActionPerformed(ActionEvent evt) {
+        con.exit();
     }
 }

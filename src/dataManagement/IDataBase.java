@@ -226,6 +226,7 @@ public interface IDataBase {
 	 *Diese Methode aendert den Namen eines Buches in der Datenbank
 	 *@param  bookID Die id des Buches
 	 *@param newName Der neue Name
+	 *@throws SQLException Datenbankfehler
 	 */
 	public void renameBook(int bookID, String newName) throws SQLException;
 	
@@ -233,8 +234,17 @@ public interface IDataBase {
 	 *Diese Methode aendert den Namen eines Kapitels in der Datenbank
 	 *@param  chapterID Die id des Kapitels
 	 *@param newName Der neue Name
+	 *@throws SQLException Datenbankfehler
 	 */
 	public void renameChapter(int chapterID, String newName)throws SQLException;
+	
+	/**
+	 * Diese Methode aendert den Namen einer Seite in der Datenbank
+	 * @param pageID Die id der Seite
+	 * @param newName Der neue Name
+	 * @throws SQLException Datenbankfehler
+	 */
+	public void renamePage(int pageID, String newName) throws SQLException;
 	
 	//move
 	/**

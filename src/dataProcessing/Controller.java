@@ -74,7 +74,8 @@ public class Controller {
 			dataTree = model.getTree();
 			view.refreshBookComboBox();
 			view.openBook(path[0]);
-		} catch (DirectoryAlreadyExistsException e) {
+		} catch (DirectoryAlreadyExistsException 
+				| DirectoryDoesNotExistsException e) {
 			handleError(e);
 		} catch (SQLException e) {
 			handleFatalError(e);
@@ -156,55 +157,35 @@ public class Controller {
 	}
 	
 	//rename
-	public void rename(String path, String newName)
+	public void rename(String[] path, String newName)
 	{
 		try {
-			String[] pathParts = path.split(", ");
-			//remove the [ in front of the path
-			pathParts[0] = pathParts[0].substring(1, pathParts[0].length());
-			if( pathParts.length == 1) //is it a book ?
-				renameBook(pathParts[0], newName);
-			else
-				if( pathParts.length == 2) // is it a chapter ?
-					renameChapter(pathParts[0], pathParts[1], newName);
-				else // it is a page
-					renamePage(pathParts[0],pathParts[1],pathParts[2],newName);
-			//refreshTree();
-		} catch (SQLException | ClassNotFoundException | IOException e) {
+			if(path.length == 1)
+				model.renameBook(path[0], newName);
+			else if (path.length == 2)
+				model.renameChapter(path[1], path[0], newName);
+			else 
+			{
+				model.renamePage(path[2], path[1], path[0], newName);
+				PageInformation info = currentPage.getPageInfo();
+				
+				boolean sameName = info.getPageName().equals(path[2]);
+				boolean sameChapter = info.getChapterName().equals(path[1]);
+				boolean sameBook = info.getBookName().equals(path[0]);
+				if(sameName && sameChapter && sameBook)//its the current page
+				{
+					path[2] = newName;
+					openPage(path);
+				}
+			}
+			this.dataTree = model.getTree();
+			view.refreshBookComboBox();
+		} catch (SQLException  e) {
 			handleFatalError(e);
-		} catch(DirectoryDoesNotExistsException e){
+		} catch(DirectoryDoesNotExistsException |
+				DirectoryAlreadyExistsException e){
 			handleError(e);
 		} 
-	}
-	
-	private void renameBook(String book, String newName) 
-			throws DirectoryDoesNotExistsException, SQLException
-	{
-		//remove the ] at the end of the path
-		book = book.substring(0, book.length()-1);
-		model.renameBook(book, newName);
-	}
-	
-	private void renameChapter(String chapter, String book, String newName) 
-			throws DirectoryDoesNotExistsException, SQLException
-	{
-		//remove the ] at the end of the path
-		chapter = chapter.substring(0, chapter.length()-1);
-		model.renameChapter(chapter, book, newName);
-	}
-	
-	private void renamePage(String page, String chapter, String book, 
-			String newName) throws DirectoryDoesNotExistsException, 
-			SQLException, ClassNotFoundException, IOException
-	{
-		//remove the ] at the end of the path
-		page = page.substring(0, page.length()-1);
-		
-		//load the Page
-		Page tempPage = model.loadPage(page, chapter, book);
-		tempPage.getPageInfo().setPageName(newName);
-		
-		model.savePage(tempPage); //save the page
 	}
 	
 	//move
@@ -267,9 +248,12 @@ public class Controller {
 	
 	private void handleFatalError(Exception e)
 	{
+		/* TODO: Exit verbessern
 		String msg = e.getMessage() + "\n Das Programm muss beendet werden";
 		view.showMessage("Fataler Fehler!", msg);
 		System.exit(1);
+		*/
+		System.out.println(e.getMessage());
 	}
 	
 	private void handleError(Exception e)
@@ -280,5 +264,17 @@ public class Controller {
 	public Tree getTree()
 	{
 		return dataTree;
+	}
+	
+	public void exit()
+	{
+		try {
+			model.savePage(currentPage);
+			System.exit(0);
+		} catch (DirectoryDoesNotExistsException e) {
+			handleError(e);
+		} catch (SQLException | IOException e) {
+			handleFatalError(e);
+		}
 	}
 }
