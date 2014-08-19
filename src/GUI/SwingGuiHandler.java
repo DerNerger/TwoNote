@@ -2,15 +2,9 @@ package GUI;
 
 import java.awt.Color;
 import java.awt.Dimension;
-import java.awt.TextArea;
 import java.awt.event.ActionEvent;
 import java.awt.event.MouseEvent;
 
-import javax.swing.Box;
-import javax.swing.JPanel;
-import javax.swing.JScrollBar;
-import javax.swing.JScrollPane;
-import javax.swing.JTextField;
 import javax.swing.tree.DefaultMutableTreeNode;
 import javax.swing.tree.DefaultTreeModel;
 import javax.swing.tree.TreePath;
@@ -84,18 +78,15 @@ public class SwingGuiHandler extends SwingGui implements View {
 		int height = pageInfo.getHeight();
 		int width = pageInfo.getWidth();
 		
-		JPanel panel = new JPanel();
-		panel.setBackground(Color.WHITE);
-		panel.setLayout(null);
-		panel.setPreferredSize(new Dimension(width, height));
+		//open the page
+		jPanelPage.setBackground(Color.WHITE);
+		jPanelPage.setLayout(null);
+		jPanelPage.setPreferredSize(new Dimension(width, height));
+		jTabbedPane1.remove(jScrollPanePage);
+		jTabbedPane1.addTab(pageName, jScrollPanePage);
 		
-		//JScrollPane pane = new JScrollPane();
-		//pane.setViewportView(panel);
-		jScrollPane2.setViewportView(panel);
-		
-		//jTabbedPane1.remove(jScrollPane2);
-		//jTabbedPane1.addTab(pageName, pane);
-		//jScrollPane2 = pane;
+		//open the content
+		//TODO: open
 	}
 
 	@Override
@@ -131,21 +122,21 @@ public class SwingGuiHandler extends SwingGui implements View {
 		else if(jTabbedPaneCreate.getSelectedComponent() == jPanelCreateChapter)
 		{
 			String bookName = (String) jComboBoxBook.getSelectedItem();
-			String chapterName = jTextFieldPage.getText(); //TODO:rename to jTextFieldChapter
+			String chapterName = jTextFieldChapter.getText(); 
 			String[] path = {bookName, chapterName};
 			con.create(path);
-			jTextFieldPage.setText("neues Kapitel");//TODO:rename to jTextFieldChapter
+			jTextFieldChapter.setText("neues Kapitel");
 		}
 		else if(jTabbedPaneCreate.getSelectedComponent() == jPanelCreatePage)
 		{
 			String bookName = (String) jComboBoxBook2.getSelectedItem();
 			String chapterName = (String) jComboBoxChapter.getSelectedItem();
-			String pageName = (String) jTextField1.getText();//TODO:rename to jTextFieldPage
+			String pageName = (String) jTextFieldPage.getText();
 			String[] path = {bookName, chapterName, pageName};
 			con.create(path);
-			jTextField1.setText("neue Seite"); //TODO:rename to jTextFieldPage
+			jTextFieldPage.setText("neue Seite"); 
 		}
-		jDialogCreate.setVisible(false);//TODO:rename to jTextFieldPage
+		jDialogCreate.setVisible(false);
 	}
 
 	@Override
