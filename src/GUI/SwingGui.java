@@ -416,8 +416,8 @@ public class SwingGui extends javax.swing.JFrame {
             }
         });
         jPanelPage.addMouseMotionListener(new java.awt.event.MouseMotionAdapter() {
-            public void mouseMoved(java.awt.event.MouseEvent evt) {
-                jPanelPageMouseMoved(evt);
+            public void mouseDragged(java.awt.event.MouseEvent evt) {
+                jPanelPageMouseDragged(evt);
             }
         });
 
@@ -684,9 +684,9 @@ public class SwingGui extends javax.swing.JFrame {
         // TODO add your handling code here:
     }//GEN-LAST:event_jTree1KeyPressed
 
-    private void jPanelPageMouseMoved(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jPanelPageMouseMoved
+    private void jPanelPageMouseDragged(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jPanelPageMouseDragged
         // TODO add your handling code here:
-    }//GEN-LAST:event_jPanelPageMouseMoved
+    }//GEN-LAST:event_jPanelPageMouseDragged
 
     /**
      * @param args the command line arguments
