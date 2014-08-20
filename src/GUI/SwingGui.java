@@ -414,8 +414,10 @@ public class SwingGui extends javax.swing.JFrame {
             public void mouseReleased(java.awt.event.MouseEvent evt) {
                 jPanelPageMouseReleased(evt);
             }
-            public void mouseClicked(java.awt.event.MouseEvent evt) {
-                jPanelPageMouseClicked(evt);
+        });
+        jPanelPage.addMouseMotionListener(new java.awt.event.MouseMotionAdapter() {
+            public void mouseMoved(java.awt.event.MouseEvent evt) {
+                jPanelPageMouseMoved(evt);
             }
         });
 
@@ -674,10 +676,6 @@ public class SwingGui extends javax.swing.JFrame {
         System.err.println("Mouse Pressed");
     }//GEN-LAST:event_jPanelPageMousePressed
 
-    private void jPanelPageMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jPanelPageMouseClicked
-        System.err.println("Mouse Clicked");
-    }//GEN-LAST:event_jPanelPageMouseClicked
-
     private void jPanelPageMouseReleased(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jPanelPageMouseReleased
         System.err.println("Mouse Released");
     }//GEN-LAST:event_jPanelPageMouseReleased
@@ -685,6 +683,10 @@ public class SwingGui extends javax.swing.JFrame {
     private void jTree1KeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_jTree1KeyPressed
         // TODO add your handling code here:
     }//GEN-LAST:event_jTree1KeyPressed
+
+    private void jPanelPageMouseMoved(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jPanelPageMouseMoved
+        // TODO add your handling code here:
+    }//GEN-LAST:event_jPanelPageMouseMoved
 
     /**
      * @param args the command line arguments
