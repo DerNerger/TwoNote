@@ -6,7 +6,6 @@ import java.awt.event.ActionEvent;
 import java.awt.event.MouseEvent;
 import java.awt.event.WindowEvent;
 
-import javax.swing.JEditorPane;
 import javax.swing.tree.DefaultMutableTreeNode;
 import javax.swing.tree.DefaultTreeModel;
 import javax.swing.tree.TreePath;
@@ -27,6 +26,8 @@ public class SwingGuiHandler extends SwingGui implements View {
 		super();
 		this.setVisible(true);
 		this.con = con;
+		
+		 //jTree1.set
 	}
 
 	//interface view
@@ -202,8 +203,7 @@ public class SwingGuiHandler extends SwingGui implements View {
     }
 	
 	@Override
-    protected void jDialogRenameWindowClosed(WindowEvent evt) {
-        jTree1.setEnabled(true);
-        System.out.println("BLAAAAAAAAAA");
+	protected void jDialogRenameWindowClosing(WindowEvent evt) {
+		jTree1.setEnabled(true);
     }
 }
