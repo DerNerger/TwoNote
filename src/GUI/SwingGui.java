@@ -279,7 +279,6 @@ public class SwingGui extends javax.swing.JFrame {
         );
 
         jDialogRename.setTitle("Umbenennen");
-        jDialogRename.setMaximumSize(new java.awt.Dimension(354, 176));
         jDialogRename.setMinimumSize(new java.awt.Dimension(354, 176));
         jDialogRename.setResizable(false);
         jDialogRename.addWindowListener(new java.awt.event.WindowAdapter() {
@@ -378,6 +377,11 @@ public class SwingGui extends javax.swing.JFrame {
                 jTree1MousePressed(evt);
             }
         });
+        jTree1.addKeyListener(new java.awt.event.KeyAdapter() {
+            public void keyTyped(java.awt.event.KeyEvent evt) {
+                jTree1KeyTyped(evt);
+            }
+        });
         jScrollPane1.setViewportView(jTree1);
 
         jButtonNew.setText("Neu...");
@@ -402,6 +406,18 @@ public class SwingGui extends javax.swing.JFrame {
         });
 
         jScrollPanePage.setBorder(javax.swing.BorderFactory.createBevelBorder(javax.swing.border.BevelBorder.RAISED));
+
+        jPanelPage.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mousePressed(java.awt.event.MouseEvent evt) {
+                jPanelPageMousePressed(evt);
+            }
+            public void mouseReleased(java.awt.event.MouseEvent evt) {
+                jPanelPageMouseReleased(evt);
+            }
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                jPanelPageMouseClicked(evt);
+            }
+        });
 
         javax.swing.GroupLayout jPanelPageLayout = new javax.swing.GroupLayout(jPanelPage);
         jPanelPage.setLayout(jPanelPageLayout);
@@ -654,6 +670,22 @@ public class SwingGui extends javax.swing.JFrame {
         // TODO add your handling code here:
     }//GEN-LAST:event_jDialogRenameWindowClosing
 
+    private void jPanelPageMousePressed(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jPanelPageMousePressed
+        System.err.println("Mouse Pressed");
+    }//GEN-LAST:event_jPanelPageMousePressed
+
+    private void jPanelPageMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jPanelPageMouseClicked
+        System.err.println("Mouse Clicked");
+    }//GEN-LAST:event_jPanelPageMouseClicked
+
+    private void jPanelPageMouseReleased(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jPanelPageMouseReleased
+        System.err.println("Mouse Released");
+    }//GEN-LAST:event_jPanelPageMouseReleased
+
+    private void jTree1KeyTyped(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_jTree1KeyTyped
+        // TODO add your handling code here:
+    }//GEN-LAST:event_jTree1KeyTyped
+
     /**
      * @param args the command line arguments
      */
@@ -693,9 +725,9 @@ public class SwingGui extends javax.swing.JFrame {
     private javax.swing.ButtonGroup buttonGroupToolbar;
     private javax.swing.JButton jButtonClose;
     private javax.swing.JButton jButtonCreate;
-    private javax.swing.JButton jButtonDelete;
-    private javax.swing.JButton jButtonNew;
-    private javax.swing.JButton jButtonRename;
+    protected javax.swing.JButton jButtonDelete;
+    protected javax.swing.JButton jButtonNew;
+    protected javax.swing.JButton jButtonRename;
     private javax.swing.JButton jButtonRenameNow;
     private javax.swing.JComboBox jComboBoxBook;
     private javax.swing.JComboBox jComboBoxBook2;
@@ -711,7 +743,7 @@ public class SwingGui extends javax.swing.JFrame {
     private javax.swing.JLabel jLabel6;
     private javax.swing.JLabel jLabel7;
     private javax.swing.JLabel jLabelError;
-    private javax.swing.JMenuBar jMenuBar1;
+    protected javax.swing.JMenuBar jMenuBar1;
     private javax.swing.JMenu jMenuData;
     private javax.swing.JMenu jMenuEdit;
     private javax.swing.JMenu jMenuExport;
@@ -730,21 +762,21 @@ public class SwingGui extends javax.swing.JFrame {
     private javax.swing.JPanel jPanelCreateBook;
     private javax.swing.JPanel jPanelCreateChapter;
     private javax.swing.JPanel jPanelCreatePage;
-    private javax.swing.JPanel jPanelPage;
-    private javax.swing.JScrollPane jScrollPane1;
+    protected javax.swing.JPanel jPanelPage;
+    protected javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JScrollPane jScrollPane3;
-    private javax.swing.JScrollPane jScrollPanePage;
-    private javax.swing.JTabbedPane jTabbedPane1;
+    protected javax.swing.JScrollPane jScrollPanePage;
+    protected javax.swing.JTabbedPane jTabbedPane1;
     private javax.swing.JTabbedPane jTabbedPaneCreate;
     private javax.swing.JTextArea jTextAreaErrorMessage;
     private javax.swing.JTextField jTextFieldBook;
     private javax.swing.JTextField jTextFieldChapter;
     private javax.swing.JTextField jTextFieldNewName;
     private javax.swing.JTextField jTextFieldPage;
-    private javax.swing.JToggleButton jToggleButtonCurser;
-    private javax.swing.JToggleButton jToggleButtonText;
-    private javax.swing.JToolBar jToolBarTool;
-    private javax.swing.JToolBar jToolBarTools;
-    private javax.swing.JTree jTree1;
+    protected javax.swing.JToggleButton jToggleButtonCurser;
+    protected javax.swing.JToggleButton jToggleButtonText;
+    protected javax.swing.JToolBar jToolBarTool;
+    protected javax.swing.JToolBar jToolBarTools;
+    protected javax.swing.JTree jTree1;
     // End of variables declaration//GEN-END:variables
 }
