@@ -378,8 +378,8 @@ public class SwingGui extends javax.swing.JFrame {
             }
         });
         jTree1.addKeyListener(new java.awt.event.KeyAdapter() {
-            public void keyTyped(java.awt.event.KeyEvent evt) {
-                jTree1KeyTyped(evt);
+            public void keyPressed(java.awt.event.KeyEvent evt) {
+                jTree1KeyPressed(evt);
             }
         });
         jScrollPane1.setViewportView(jTree1);
@@ -682,9 +682,9 @@ public class SwingGui extends javax.swing.JFrame {
         System.err.println("Mouse Released");
     }//GEN-LAST:event_jPanelPageMouseReleased
 
-    private void jTree1KeyTyped(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_jTree1KeyTyped
+    private void jTree1KeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_jTree1KeyPressed
         // TODO add your handling code here:
-    }//GEN-LAST:event_jTree1KeyTyped
+    }//GEN-LAST:event_jTree1KeyPressed
 
     /**
      * @param args the command line arguments
