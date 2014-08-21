@@ -1,36 +1,54 @@
 package GUI;
 
 import java.awt.Color;
+import java.awt.Component;
 import java.awt.Dimension;
+import java.awt.Font;
+import java.awt.Rectangle;
 import java.awt.event.ActionEvent;
+import java.awt.event.FocusEvent;
+import java.awt.event.FocusListener;
+import java.awt.event.KeyEvent;
 import java.awt.event.MouseEvent;
 import java.awt.event.WindowEvent;
+import java.util.HashMap;
 
+import javax.swing.BorderFactory;
+import javax.swing.JLabel;
+import javax.swing.JTextPane;
+import javax.swing.JToolBar;
 import javax.swing.tree.DefaultMutableTreeNode;
 import javax.swing.tree.DefaultTreeModel;
 import javax.swing.tree.TreePath;
 
 import pageData.Content;
 import pageData.PageInformation;
-import Tools.Tool;
+import pageData.TextBox;
+import Tools.DrawTool;
+import Tools.EditMod;
+import Tools.TextDrawTool;
+import Tools.EditTool;
+import Tools.TextEditTool;
 import dataManagement.Tree;
 import dataProcessing.Controller;
 
-public class SwingGuiHandler extends SwingGui implements View {
+public class SwingGuiHandler extends SwingGui implements View, FocusListener {
 	
 	private static final long serialVersionUID = 1L;
 	private Controller con;
+	private HashMap<Content, Component> map;
+	private DrawTool drawTool;
 	
 	public SwingGuiHandler(Controller con)
 	{
 		super();
 		this.setVisible(true);
 		this.con = con;
-		
-		 //jTree1.set
+		map = new HashMap<Content, Component>();
+		drawTool = null;
 	}
 
-	//interface view
+	//interface view ----------------------------------------------------------
 	@Override
 	public void refreshTree() {
 		Tree tree = con.getTree();
@@ -74,14 +92,17 @@ public class SwingGuiHandler extends SwingGui implements View {
 		int width = pageInfo.getWidth();
 		
 		//open the page
-		jPanelPage.setBackground(Color.WHITE);
+		jPanelPage.removeAll();
+		jPanelPage.setBackground(Color.LIGHT_GRAY);
 		jPanelPage.setLayout(null);
 		jPanelPage.setPreferredSize(new Dimension(width, height));
 		jTabbedPane1.remove(jScrollPanePage);
 		jTabbedPane1.addTab(pageName, jScrollPanePage);
 		
 		//open the content
-		//TODO: open
+		for(Content c : content)
+			drawContent(c);
+		refreshPage();
 	}
 
 	@Override
@@ -90,15 +111,53 @@ public class SwingGuiHandler extends SwingGui implements View {
 		jTextAreaErrorMessage.setText(msg); //TODO: erst bei OK beenden
 		jDialogError.setVisible(true);
 	}
-
+	
 	@Override
-	public void showTool(Tool t) {
-		// TODO Auto-generated method stub
-		
+	public void removeContent(Content cont) {
+		Component comp = map.get(cont);
+		jPanelPage.remove(comp);
+		comp.setVisible(false);
+		refreshPage();
 	}
 	
-	//handler
+	//interface Focuslistener -------------------------------------------------
+	@Override
+	public void focusLost(FocusEvent arg0) {
+		con.closeTool();
+	}
 	
+	@Override
+	public void focusGained(FocusEvent arg0) {
+		System.out.println("inc focus");
+		Component comp = arg0.getComponent();
+		Content c = con.getContent(Integer.parseInt(comp.getName()));
+		TextEditTool tool = null;
+		EditMod editMod = con.getEditMod();
+		switch(c.getContentType())
+		{
+		case textBox:
+			if(editMod != EditMod.Text && editMod != EditMod.Curser)
+				return;
+			if(editMod == editMod.Curser)
+			{
+				con.setEditMod(EditMod.Text);
+				jToggleButtonText.setSelected(true);
+			}
+			TextBox box = (TextBox)c;
+			JTextPane pane = (JTextPane) comp;
+			tool = new TextEditTool(box, pane, jPanelPage);
+			tool.setToolbar(jToolBarTool);
+			refreshPage();
+			break;
+		default:
+			break;
+		}
+		if(tool != null)
+			con.openTool(tool);
+			
+	}
+	
+	//handler -----------------------------------------------------------------
 	@Override
 	protected void jButtonCreateActionPerformed(ActionEvent evt)
 	{
@@ -206,4 +265,105 @@ public class SwingGuiHandler extends SwingGui implements View {
 	protected void jDialogRenameWindowClosing(WindowEvent evt) {
 		jTree1.setEnabled(true);
     }
+	
+	@Override
+    protected void jTree1KeyPressed(KeyEvent evt) {
+		
+		//cut
+       if(evt.isControlDown() && evt.getKeyCode() == KeyEvent.VK_X)
+       {
+    	   TreePath[] paths = jTree1.getSelectionPaths();
+    	   if(paths == null || paths.length == 0)
+    		   return;
+    	   String[][] pathStrings = new String[paths.length][];
+    	   for (int i = 0; i < pathStrings.length; i++) {
+    		   pathStrings[i] = new String[paths[i].getPathCount()];
+    		   Object[] path = paths[i].getPath();
+    		   for (int j = 0; j < path.length; j++) {
+    			   pathStrings[i][j] = path[j].toString();
+    		   }
+    	   }
+    	   con.cutDirectories(pathStrings);
+       }//paste 
+       else if (evt.isControlDown() && evt.getKeyCode() == KeyEvent.VK_V)
+       {
+    	   TreePath path = jTree1.getSelectionPath();
+    	   if(path == null)
+    		   return;
+    	   String [] stringPath = new String[path.getPathCount()];
+    	   Object[] pathParts = path.getPath();
+    	   for (int i = 0; i < pathParts.length; i++) {
+    		   stringPath[i] = pathParts[i].toString();
+    	   }
+    	   con.pasteDirectories(stringPath);
+       }
+    }
+	
+	@Override
+	protected void jToggleButtonCurserActionPerformed(ActionEvent evt) {
+		con.setEditMod(EditMod.Curser);
+		jToggleButtonCurser.transferFocus();
+	}
+
+	@Override
+	protected void jToggleButtonTextActionPerformed(ActionEvent evt) {
+		con.setEditMod(EditMod.Text);
+	}
+	
+	@Override
+    protected void jPanelPageMousePressed(MouseEvent evt) {
+        if(drawTool != null)
+        	throw new RuntimeException("Draw tool bereits gestartet");
+        EditMod currentEditMod = con.getEditMod();
+        switch(currentEditMod) 
+        {
+        case Curser:
+        	break;
+        case Text:
+        	drawTool = new TextDrawTool(jPanelPage);
+        	drawTool.drawNewContent(evt.getX(), evt.getY());
+        	refreshPage();
+        	break;
+		default:
+			break;
+        }
+    }
+	
+	@Override
+    protected void jPanelPageMouseDragged(MouseEvent evt) {
+        if(drawTool != null)
+        {
+        	drawTool.editNewContent(evt.getX(), evt.getY());
+        	refreshPage();
+        }
+    }
+	
+	@Override
+	protected void jPanelPageMouseReleased(MouseEvent evt) {
+		if(drawTool != null)
+		{
+			Content c = drawTool.getNewContent(evt.getX(), evt.getY());
+			con.createContent(c);
+			Component comp = drawContent(c);
+			comp.requestFocusInWindow();
+			refreshPage();
+			drawTool = null;
+		}
+    }
+
+	//private methods --------------------------------------------------------
+	private void refreshPage()
+	{
+		revalidate();
+		repaint();
+	}
+	
+	private Component drawContent(Content c)
+	{
+		Component comp = c.draw(jPanelPage);
+		comp.setName(c.getNumber()+"");
+		comp.addFocusListener(this);
+		map.put(c, comp);
+		return comp;
+	}
 }
