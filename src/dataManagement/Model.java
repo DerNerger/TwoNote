@@ -417,11 +417,30 @@ public class Model {
 	 * @param chapterName Name des Kapitels
 	 * @param newBook name des neuen Buches
 	 */
-	public void move(String chapterName, String bookName, String newBook)
-		throws SQLException
+	public void moveChapter(String chapterName, String bookName, String newBook)
+		throws SQLException, DirectoryAlreadyExistsException, 
+			DirectoryDoesNotExistsException
 	{
-		int chapterID = getChapterID(ActionType.move, chapterName, bookName);
-		int newBookId = getBookID(ActionType.move, bookName);
-		db.move(chapterID, newBookId);
+		ActionType type = ActionType.move;
+		int chapterID = getChapterID(type, chapterName, bookName);
+		int newBookId = getBookID(type, newBook);
+		if(db.existsChapter(chapterName, newBookId))
+			throw new DirectoryAlreadyExistsException
+				(DirectoryType.Chapter, type, chapterName);
+		db.moveChapter(chapterID, newBookId);
 	}
+	
+	public void movePage(String pageName, String chapterName, String bookName,
+			String newChapter, String newBook) throws SQLException, 
+			DirectoryAlreadyExistsException, DirectoryDoesNotExistsException
+		{
+			ActionType type = ActionType.move;
+			int pageID = getPageID(type, pageName, chapterName, bookName);
+			int newChapterID = getChapterID(type, newChapter, newBook);
+			
+			if(db.existsPage(pageName, newChapterID))
+				throw new DirectoryAlreadyExistsException
+					(DirectoryType.Page, type, pageName);
+			db.movePage(pageID, newChapterID);
+		}
 }

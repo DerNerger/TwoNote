@@ -650,12 +650,30 @@ public class MySqlDatabase implements IDataBase {
 	 * {@inheritDoc}
 	 * */
 	@Override
-	public void move(int chapterID, int newBookId) throws SQLException
+	public void moveChapter(int chapterID, int newBookId) throws SQLException
 	{
 		Statement stmt =null;
 		try  {		
 			stmt = con.createStatement();
 			String query="UPDATE `Chapter` SET Book = '"+newBookId+"' WHERE ID= '"+chapterID+"';";
+			stmt.executeUpdate(query);
+		}
+		finally
+		{
+			if(stmt!=null) stmt.close();
+		}
+	}
+	
+	/**
+	 * {@inheritDoc}
+	 * */
+	@Override
+	public void movePage(int pageID, int newChapterId) throws SQLException
+	{
+		Statement stmt =null;
+		try  {		
+			stmt = con.createStatement();
+			String query="UPDATE `Pages` SET Chapter = '"+newChapterId+"' WHERE ID= '"+pageID+"';";
 			stmt.executeUpdate(query);
 		}
 		finally

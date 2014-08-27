@@ -251,5 +251,11 @@ public interface IDataBase {
 	 * Diese Methode aendert bei einem Kapitel die id des 
 	 * zugehoerigen Buches auf eine andere.
 	 */
-	public void move(int chapterID, int newBookId) throws SQLException;
+	public void moveChapter(int chapterID, int newBookId) throws SQLException;
+	
+	/**
+	 * Diese Methode aendert bei einer Seite die id des 
+	 * zugehoerigen Kapitels auf eine andere.
+	 */
+	public void movePage(int pageID, int newChapterId) throws SQLException;
 }

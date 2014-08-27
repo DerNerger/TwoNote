@@ -11,7 +11,8 @@ import java.sql.SQLException;
 import GUI.SwingGuiHandler;
 import GUI.View;
 import Tools.EditMod;
-import Tools.Tool;
+import Tools.TextEditTool;
+import Tools.EditTool;
 
 import dataManagement.Model;
 import dataManagement.Tree;
@@ -29,13 +30,14 @@ import pageData.TextBox;
  * Seite geladen und modifiziert werden.
  * */
 public class Controller {
-	
+	//testcomment
 	private View view;
 	private Model model;
 	private Tree dataTree;
 	private Page currentPage;
-	private Tool currentTool;
+	private EditTool currentTool;
 	private EditMod editMod;
+	private DirectoryClipboard clipboard;
 	
 	//constructor
 	/**
@@ -56,11 +58,13 @@ public class Controller {
 			//this.currentPage = gute default loesung
 			//this.currentTool = gute default loesung
 			this.editMod = EditMod.Curser;
+			this.clipboard = null;
 		} catch (ClassNotFoundException | SQLException e) {
 			handleFatalError(e);
 		}
 	}
 	
+	//directory manipulation -------------------------------------------------
 	//create
 	public void create(String[] path)
 	{
@@ -83,32 +87,11 @@ public class Controller {
 		}
 	}
 	
-	/**
-    * Auf der Aktuell geoeffneten Seite wird ein Seiteninhalt erstellt,
-	* und somit auf der aktuellen Seite als ungespeicherte aenderung vermerkt.
-	* @param type der Typ des Seiteninhalts
-	* @param x Die x-Koordinate an welcher der Inhalt erstellt werden soll
-	* @param y Die y-Koordinate an welcher der Inhalt erstellt werden soll
-	* @return der erstellte Seiteninhalt
-	* */
-	public void createContent(int x, int y) 
+
+	public void createContent(Content c) 
 	{
-		Content cont = null;
-		switch(editMod)
-		{
-		case Text:
-			cont = new TextBox(x, y);
-			//currentTool = new TextEditTool(cont); TODO: THIS
-			view.showTool(currentTool);
-			break;
-		default:
-			break;
-		}
-		
-		if(cont != null)
-		{
-			currentPage.addContent(cont);
-		}
+		currentPage.createContent(c);
+		savePage();
 	}
 	
 	//delete
@@ -169,12 +152,8 @@ public class Controller {
 			else if (path.length == 4)
 			{
 				model.renamePage(path[3], path[2], path[1], newName);
-				PageInformation info = currentPage.getPageInfo();
 				
-				boolean sameName = info.getPageName().equals(path[3]);
-				boolean sameChapter = info.getChapterName().equals(path[2]);
-				boolean sameBook = info.getBookName().equals(path[1]);
-				if(sameName && sameChapter && sameBook)//its the current page
+				if(isCurrentPage(path))
 				{
 					path[3] = newName;
 					openPage(path);
@@ -192,63 +171,83 @@ public class Controller {
 	}
 	
 	//move
-	public void move(String oldPath, String newPath)
+	public void move(String[] oldPath, String[] newPath)
 	{
 		try {
-			String[] pathPartsOld = oldPath.split(", ");
-			String[] pathPartsNew = newPath.split(", ");
-			
-			//is it a book ?
-			if(pathPartsOld.length == 1 || pathPartsNew.length == 1)
-				return; //sensless to move a book
-			else
+			if(oldPath.length == 3) //is it a chapter?
+				model.moveChapter(oldPath[2], oldPath[1], newPath[1]);
+			else if(oldPath.length ==4) //is it a page?
 			{
-				String oldBook = pathPartsOld[0];
-				String newBook = pathPartsNew[0];
-				String oldChapter = pathPartsOld[1];
-				
-				//remove the [ in front of the path
-				oldBook = oldBook.substring(1, oldBook.length());
-				newBook = newBook.substring(1, newBook.length());
-				
-				// is it a chapter ?
-				if( pathPartsOld.length == 2 || pathPartsNew.length == 2)
-					moveChapter(oldChapter, oldBook, newBook);
-				else // it is a page
+				model.movePage(oldPath[3], oldPath[2], oldPath[1], 
+						newPath[2], newPath[1]);
+				if(isCurrentPage(oldPath))
 				{
-					String oldPage = pathPartsOld[2];
-					String newChapter = pathPartsNew[1];
-					movePage(oldPage, oldChapter, oldBook, newChapter, newBook);
+					oldPath[1] = newPath[1];
+					oldPath[2] = newPath[2];
+					openPage(newPath);
 				}
 			}
-			//refreshTree();
-		} catch (SQLException | ClassNotFoundException | IOException e) {
+			dataTree = model.getTree();
+			view.refreshTree();
+		} catch (SQLException  e) {
 			handleFatalError(e);
-		} catch(DirectoryDoesNotExistsException e){
+		} catch(DirectoryDoesNotExistsException |
+				DirectoryAlreadyExistsException e){
 			handleError(e);
 		} 
 	}
 	
-	private void moveChapter(String oldChapter, String oldBook, String newBook) 
-			throws SQLException
+	//cut
+	public void cutDirectories(String[][] paths)
 	{
-		oldChapter = oldChapter.substring(0, oldChapter.length() - 1);
-		model.move(oldChapter, oldBook, newBook);
+ 	   //checking the depth
+ 	   int depth = paths[0].length;
+ 	   for (int i = 1; i < paths.length; i++) {
+ 		   if(paths[i].length != depth)
+ 		   {
+ 			   String msg = "Es können nur Verzeichnisse der " +
+ 			   		"gleichen Tiefe \ngemeinsam verschoben werden.";
+ 			   view.showMessage("Ausschneiden", msg);
+ 			   return;
+ 		   }
+ 	   }
+ 	   clipboard = new DirectoryClipboard(paths);
 	}
 	
-	private void movePage(String oldPage, String oldChapter, String oldBook, 
-			String newChapter, String newBook) 
-			throws DirectoryDoesNotExistsException, ClassNotFoundException,
-			SQLException, IOException
+	//paste
+	public void pasteDirectories(String[] newPath)
 	{
-		oldPage = oldPage.substring(0, oldPage.length() - 1);
-		Page tempPage = model.loadPage(oldPage, oldChapter, oldBook);
-		tempPage.getPageInfo().setBookName(newBook);
-		tempPage.getPageInfo().setChapterName(newChapter);
-		model.savePage(tempPage);
+		if(newPath.length != clipboard.getPathDepth() - 1){
+			String msg = "Die Tiefe der Verzeichnisse darf sich " +
+					"nicht unterscheiden.";
+			view.showMessage("Einfügen", msg);
+			return;
+		}
+		String[][] src = clipboard.getPaths();
+		for (int i = 0; i < src.length; i++) {
+			move(src[i], newPath);
+		}
 	}
 	
-	
+	public void savePage()
+	{
+		try {
+			model.savePage(currentPage);
+		} catch (DirectoryDoesNotExistsException e) {
+			handleError(e);
+		} catch (SQLException | IOException e) {
+			handleFatalError(e);
+		}
+	}
+
+	private boolean isCurrentPage(String[] oldPath) {
+		PageInformation info = currentPage.getPageInfo();
+		boolean sameName = info.getPageName().equals(oldPath[3]);
+		boolean sameChapter = info.getChapterName().equals(oldPath[2]);
+		boolean sameBook = info.getBookName().equals(oldPath[1]);
+		return (sameName && sameChapter && sameBook);
+	}
+
 	private void handleFatalError(Exception e)
 	{
 		/* TODO: Exit verbessern
@@ -256,6 +255,7 @@ public class Controller {
 		view.showMessage("Fataler Fehler!", msg);
 		System.exit(1);
 		*/
+		savePage();
 		System.out.println(e.getMessage());
 	}
 	
@@ -271,13 +271,50 @@ public class Controller {
 	
 	public void exit()
 	{
-		try {
-			model.savePage(currentPage);
-			System.exit(0);
-		} catch (DirectoryDoesNotExistsException e) {
-			handleError(e);
-		} catch (SQLException | IOException e) {
-			handleFatalError(e);
+		savePage();
+		System.exit(0);
+	}
+	
+	public void setEditMod(EditMod mod)
+	{
+		this.editMod = mod;
+	}
+	
+	public EditMod getEditMod()
+	{
+		return editMod;
+	}
+	
+	//Content manipulation ---------------------------------------------------
+	
+	public void openTool(EditTool tool)
+	{
+		if(currentTool != null)
+			closeTool();
+		currentTool = tool;
+		currentTool.startEdit();
+	}
+	
+	public void closeTool()
+	{
+		if(currentTool != null)
+		{
+			Content editCont = currentTool.stopEdit();
+			if(editCont == null)
+			{
+				int number = currentTool.getContentNumber();
+				view.removeContent(currentPage.getContent(number));
+				currentPage.deleteContent(number);
+			}
+			else
+				currentPage.saveContent(editCont);
+			savePage();
+			currentTool = null;
 		}
+	}
+	
+	public Content getContent(int number)
+	{
+		return currentPage.getContent(number);
 	}
 }

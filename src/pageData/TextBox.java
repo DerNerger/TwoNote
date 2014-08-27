@@ -10,8 +10,9 @@ import java.awt.Component;
 import java.awt.Font;
 import java.io.Serializable;
 
-import javax.swing.JLabel;
+import javax.swing.BorderFactory;
 import javax.swing.JPanel;
+import javax.swing.JTextPane;
 
 
 /**
@@ -122,18 +123,16 @@ public class TextBox extends Content implements Serializable {
 	 * */
 	@Override
 	public Component draw(JPanel panel) {
-		if(text.length() == 0)
-			return null;
-		
-		//create Label
-		JLabel label = new JLabel(text);
-		label.setForeground(fontColor);
-		label.setBackground(backgroundColor);		
-		label.setFont(new Font("Ubuntu", 0, fontSize));
-		
-		//add label to panel
-		panel.add(label);
-		label.setBounds(x,y,width, height);
-		return label;
+		JTextPane textBox = new JTextPane();
+		textBox.setText(text);
+		textBox.setEditable(false);
+		textBox.setForeground(fontColor);
+		textBox.setBackground(backgroundColor);
+		textBox.setFont(new Font("Ubuntu", 0, fontSize));
+		panel.add(textBox);
+		textBox.setBounds(x,y,width, height);
+		textBox.setVisible(true);
+		textBox.setName(super.getNumber()+"");
+		return textBox;
 	}
 }
